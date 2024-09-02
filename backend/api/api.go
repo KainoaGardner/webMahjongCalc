@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/KainoaGardner/webMahjongCalc/internal"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 )
@@ -23,6 +24,8 @@ func (s *APIServer) Run() error {
 	r.Use(middleware.Logger)
 
 	r.Route("/api/v1", func(r chi.Router) {
+		handHandler := internal.NewHandler()
+		handHandler.RegisterRoutes(r)
 
 	})
 
