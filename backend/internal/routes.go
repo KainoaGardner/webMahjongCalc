@@ -22,7 +22,7 @@ func (h *Handler) RegisterRoutes(r chi.Router) {
 
 func (h *Handler) scoreHand(w http.ResponseWriter, r *http.Request) {
 	var payload types.PostHandScore
-	err := utils.ParseJSON(r, payload)
+	err := utils.ParseJSON(r, &payload)
 	if err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return

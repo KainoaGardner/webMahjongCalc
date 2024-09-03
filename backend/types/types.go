@@ -3,6 +3,10 @@ package types
 type HandObject interface {
 }
 
+type Test struct {
+	Text string `json:"text"`
+}
+
 type PostHandScore struct {
 	HandParts *HandParts `json:"handParts"`
 }
