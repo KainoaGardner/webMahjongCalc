@@ -21,13 +21,22 @@ func (h *Handler) RegisterRoutes(r chi.Router) {
 }
 
 func (h *Handler) scoreHand(w http.ResponseWriter, r *http.Request) {
-	var payload types.PostHandScore
-	err := utils.ParseJSON(r, &payload)
+	var postHandScore types.PostHandScore
+	err := utils.ParseJSON(r, &postHandScore)
 	if err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.WriteJSON(w, http.StatusCreated, payload)
+	hand := types.HandPartsBlocks{
+		Menzen: make([][]string, 0),
+		Chi:    make([][]string, 0),
+		Pon:    make([][]string, 0),
+		Kan:    make([][]string, 0),
+		Ankan:  make([][]string, 0),
+	}
+	returnHandScore := types.ReturnHandScore{Hand: &hand, Yaku: []*types.YakuComponet{}, FuComponet: []*types.FuComponet{}}
+
+	utils.WriteJSON(w, http.StatusCreated, returnHandScore)
 
 }
