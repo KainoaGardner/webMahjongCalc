@@ -3,6 +3,7 @@ package internal
 import (
 	"net/http"
 
+	"github.com/KainoaGardner/webMahjongCalc/internal/hands"
 	"github.com/KainoaGardner/webMahjongCalc/types"
 	"github.com/KainoaGardner/webMahjongCalc/utils"
 	"github.com/go-chi/chi/v5"
@@ -28,15 +29,11 @@ func (h *Handler) scoreHand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	hand := types.HandPartsBlocks{
-		Menzen: make([][]string, 0),
-		Chi:    make([][]string, 0),
-		Pon:    make([][]string, 0),
-		Kan:    make([][]string, 0),
-		Ankan:  make([][]string, 0),
+	returnHandScore, err := hands.GetHandScore(&postHandScore)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
 	}
-	returnHandScore := types.ReturnHandScore{Hand: &hand, Yaku: []*types.YakuComponet{}, FuComponet: []*types.FuComponet{}}
 
-	utils.WriteJSON(w, http.StatusCreated, returnHandScore)
-
+	utils.WriteJSON(w, http.StatusOK, returnHandScore)
 }

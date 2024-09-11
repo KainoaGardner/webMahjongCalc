@@ -1,10 +1,15 @@
 package hands
 
-type Hand struct {
-	Hand string
-}
+import (
+	"github.com/KainoaGardner/webMahjongCalc/types"
+)
 
-func NewHand() *Hand {
-	return &Hand{Hand: "test"}
+func GetHandScore(hand *types.PostHandScore) (*types.ReturnHandScore, error) {
+	err := CheckValidData(hand)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
 
 }
