@@ -6,8 +6,15 @@ import (
 )
 
 func CheckValidData(hand *types.PostHandScore) error {
-
-	err := checkTotalTileAmount(hand)
+	err := checkMinMenzenTiles(hand)
+	if err != nil {
+		return err
+	}
+	err = checkTotalTileAmount(hand)
+	if err != nil {
+		return err
+	}
+	err = checkCallTileMultiples(hand)
 	if err != nil {
 		return err
 	}
@@ -15,10 +22,31 @@ func CheckValidData(hand *types.PostHandScore) error {
 	if err != nil {
 		return err
 	}
-
 	err = checkValidTiles(hand)
 	if err != nil {
 		return err
+	}
+	err = checkKaze(hand)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func checkMinMenzenTiles(hand *types.PostHandScore) error {
+	if len(hand.Hand.Menzen) <= 1 {
+		return fmt.Errorf("Must have at least 2 menzen tiles")
+	}
+	return nil
+}
+
+func checkCallTileMultiples(hand *types.PostHandScore) error {
+	if len(hand.Hand.Chi)%3 != 0 || len(hand.Hand.Pon)%3 != 0 {
+		return fmt.Errorf("Calls Chi and Pon must be multiple of 3")
+	}
+	if len(hand.Hand.Kan)%4 != 0 || len(hand.Hand.Ankan)%4 != 0 {
+		return fmt.Errorf("Calls Kan and Ankan must be multiple of 4")
 	}
 
 	return nil
@@ -43,6 +71,10 @@ func checkTotalTileAmount(hand *types.PostHandScore) error {
 
 func getEachTileAmount(tiles []string, count map[string]int) {
 	for _, tile := range tiles {
+		//if aka count as normal
+		if tile == "M5A" || tile == "S5A" || tile == "P5A" {
+			tile = tile[:len(tile)-1]
+		}
 		count[tile] += 1
 	}
 }
@@ -73,7 +105,6 @@ func checkValidTile(tiles []string) error {
 		}
 	}
 	return nil
-
 }
 
 func checkValidTiles(hand *types.PostHandScore) error {
@@ -104,4 +135,25 @@ func checkValidTiles(hand *types.PostHandScore) error {
 
 	return nil
 
+}
+
+func checkKaze(hand *types.PostHandScore) error {
+	var kaze = map[string]bool{
+		"H1": true,
+		"H2": true,
+		"H3": true,
+		"H4": true,
+	}
+	if !kaze[hand.Jikaze] || !kaze[hand.Bakaze] {
+		return fmt.Errorf("Bakaze and Jikaze must be in H1,H2,H3,H4 (Ton,Nan,Sha,Pei)")
+	}
+
+	return nil
+}
+
+func checkAgariType(hand *types.PostHandScore) error {
+	if !hand.Ron && !hand.Tsumo {
+		return fmt.Errorf("Must have agari type ron or tsumo")
+	}
+	return nil
 }

@@ -31,20 +31,33 @@ type HandParts struct {
 }
 
 type HandPartsBlocks struct {
-	Menzen [][]string `json:"menzen"`
-	Chi    [][]string `json:"chi"`
-	Pon    [][]string `json:"pon"`
-	Kan    [][]string `json:"kan"`
-	Ankan  [][]string `json:"ankan"`
+	Menzen Suits `json:"menzen"`
+	Chi    Suits `json:"chi"`
+	Pon    Suits `json:"pon"`
+	Kan    Suits `json:"kan"`
+	Ankan  Suits `json:"ankan"`
+}
+
+type Suits struct {
+	Manzu [][]string `json:"manzu"`
+	Souzu [][]string `json:"souzu"`
+	Pinzu [][]string `json:"pinzu"`
+	Jihai [][]string `json:"jihai"`
 }
 
 // point return
 type ReturnHandScore struct {
-	Hand       *HandPartsBlocks `json:"hand"`
-	Han        int              `json:"han"`
-	Fu         int              `json:"fu"`
-	Yaku       []*YakuComponet  `json:"yaku"`
-	FuComponet []*FuComponet    `json:"fucomponet"`
+	Hand      *HandPartsBlocks `json:"hand"`
+	HandScore *Score           `json:"handscore"`
+}
+
+type Score struct {
+	Han        int             `json:"han"`
+	Fu         int             `json:"fu"`
+	Score      int             `json:"score"`
+	ScoreType  string          `json:"scoretype"`
+	Yaku       []*YakuComponet `json:"yaku"`
+	FuComponet []*FuComponet   `json:"fucomponet"`
 }
 
 type YakuComponet struct {
