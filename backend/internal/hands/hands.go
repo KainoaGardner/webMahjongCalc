@@ -16,7 +16,7 @@ func GetHandScore(hand *types.PostHandScore) (*types.ReturnHandScore, error) {
 		return nil, err
 	}
 
-	winningHand, handScore, err := getMaxScoreWin(winningHands)
+	winningHand, handScore, err := getMaxScoreWin(*winningHands)
 	if err != nil {
 		return nil, err
 	}
@@ -27,9 +27,8 @@ func GetHandScore(hand *types.PostHandScore) (*types.ReturnHandScore, error) {
 
 }
 
-func getMaxScoreWin(winningHands *[]types.HandPartsBlocks) (*types.HandPartsBlocks, *types.Score, error) {
-	var winningHand types.HandPartsBlocks
+func getMaxScoreWin(winningHands []types.HandPartsBlocks) (*types.HandPartsBlocks, *types.Score, error) {
 	var handScore types.Score
-
+	winningHand := winningHands[0]
 	return &winningHand, &handScore, nil
 }

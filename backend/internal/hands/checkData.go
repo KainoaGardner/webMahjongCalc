@@ -6,7 +6,11 @@ import (
 )
 
 func CheckValidData(hand *types.PostHandScore) error {
-	err := checkMinMenzenTiles(hand)
+	err := checkAgari(hand)
+	if err != nil {
+		return err
+	}
+	err = checkMinMenzenTiles(hand)
 	if err != nil {
 		return err
 	}
@@ -151,9 +155,13 @@ func checkKaze(hand *types.PostHandScore) error {
 	return nil
 }
 
-func checkAgariType(hand *types.PostHandScore) error {
+func checkAgari(hand *types.PostHandScore) error {
 	if !hand.Ron && !hand.Tsumo {
 		return fmt.Errorf("Must have agari type ron or tsumo")
+	}
+	if !types.Tiles[hand.Hand.Agari] {
+		return fmt.Errorf("%s is not a valid agari tile", hand.Hand.Agari)
+
 	}
 	return nil
 }

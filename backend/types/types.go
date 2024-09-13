@@ -28,9 +28,25 @@ type HandParts struct {
 	Pon    []string `json:"pon"`
 	Kan    []string `json:"kan"`
 	Ankan  []string `json:"ankan"`
+	Agari  string   `json:"agari"`
 }
 
 type HandPartsBlocks struct {
+	Menzen SuitBlocks `json:"menzen"`
+	Chi    SuitBlocks `json:"chi"`
+	Pon    SuitBlocks `json:"pon"`
+	Kan    SuitBlocks `json:"kan"`
+	Ankan  SuitBlocks `json:"ankan"`
+}
+
+type SuitBlocks struct {
+	Manzu [][]string `json:"manzu"`
+	Souzu [][]string `json:"souzu"`
+	Pinzu [][]string `json:"pinzu"`
+	Jihai [][]string `json:"jihai"`
+}
+
+type HandSuits struct {
 	Menzen Suits `json:"menzen"`
 	Chi    Suits `json:"chi"`
 	Pon    Suits `json:"pon"`
@@ -39,10 +55,10 @@ type HandPartsBlocks struct {
 }
 
 type Suits struct {
-	Manzu [][]string `json:"manzu"`
-	Souzu [][]string `json:"souzu"`
-	Pinzu [][]string `json:"pinzu"`
-	Jihai [][]string `json:"jihai"`
+	Manzu []string `json:"manzu"`
+	Souzu []string `json:"souzu"`
+	Pinzu []string `json:"pinzu"`
+	Jihai []string `json:"jihai"`
 }
 
 // point return
