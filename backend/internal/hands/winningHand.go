@@ -2,71 +2,102 @@ package hands
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/KainoaGardner/webMahjongCalc/types"
 )
 
-func GetWinningHands(hand *types.PostHandScore) (*[]types.HandPartsBlocks, error) {
-	var winningHands []types.HandPartsBlocks
-	var handPartsBlocks types.HandPartsBlocks
+func GetWinningHands(hand *types.HandParts) (*[]types.HandPartsBlocks, error) {
+	// var winningHands []types.HandPartsBlocks
 
-	possibleHeads, err := getAllHeads(hand)
+	//first menzen
 
-	sorted, err := sortAllSuit(hand)
-	if err != nil {
-		return nil, err
-	}
+	var possibleParts [][][]string
+	tileCount := getTileMap(hand.Menzen)
+	heads := getHeads(tileCount)
+	mentsu := getMentsu(tileCount)
 
-	handPartsBlocks.Menzen.Manzu = append(handPartsBlocks.Menzen.Manzu, sorted.Menzen.Manzu)
-	handPartsBlocks.Menzen.Souzu = append(handPartsBlocks.Menzen.Souzu, sorted.Menzen.Souzu)
-	handPartsBlocks.Menzen.Pinzu = append(handPartsBlocks.Menzen.Pinzu, sorted.Menzen.Pinzu)
-	handPartsBlocks.Menzen.Jihai = append(handPartsBlocks.Menzen.Jihai, sorted.Menzen.Jihai)
-	winningHands = append(winningHands, handPartsBlocks)
-
-	return &winningHands, nil
+	return nil, nil
 }
 
-func sortBySuit(handPart []string, sortedHandPart *types.Suits) error {
+func getTileMap(handPart []string) map[string]int {
+	tileCount := make(map[string]int)
 	for _, tile := range handPart {
-		switch tile[0] {
-		case 'H':
-			sortedHandPart.Jihai = append(sortedHandPart.Jihai, tile)
-		case 'M':
-			sortedHandPart.Manzu = append(sortedHandPart.Manzu, tile)
-		case 'S':
-			sortedHandPart.Souzu = append(sortedHandPart.Souzu, tile)
-		case 'P':
-			sortedHandPart.Pinzu = append(sortedHandPart.Pinzu, tile)
-		default:
-			return fmt.Errorf("%s not valid suit", tile)
+		tileCount[tile] += 1
+	}
+
+	return tileCount
+}
+
+func getHeads(tileCount map[string]int) [][]string {
+	var heads [][]string
+	for tile, count := range tileCount {
+		if count >= 2 {
+			heads = append(heads, []string{tile, tile})
+		}
+	}
+	return heads
+
+}
+
+func getMentsu(tileCount map[string]int) [][]string {
+	var mentsu [][]string
+	for tile := range tileCount {
+		shuntsu, ok := validShuntsu(tileCount, tile)
+		if ok {
+			mentsu = append(mentsu, shuntsu)
+		}
+		koutsu, ok := validKoutsu(tileCount, tile)
+		if ok {
+			mentsu = append(mentsu, koutsu)
+		}
+		kantsu, ok := validKantsu(tileCount, tile)
+		if ok {
+			mentsu = append(mentsu, kantsu)
+		}
+
+	}
+
+	return mentsu
+}
+
+func validShuntsu(tileCount map[string]int, tile string) ([]string, bool) {
+	suit := tile[0]
+	if suit == 'H' {
+		return nil, false
+	}
+
+	return nil, false
+}
+
+func validKoutsu(tileCount map[string]int, tile string) ([]string, bool) {
+	if tileCount[tile] >= 3 {
+		return []string{tile, tile, tile}, true
+	} else if tileCount[tile] == 2 {
+		if tile == "M5" && tileCount["M5A"] > 0 {
+			return []string{tile, tile, "M5A"}, true
+		} else if tile == "S5" && tileCount["S5A"] > 0 {
+			return []string{tile, tile, "S5A"}, true
+		} else if tile == "P5" && tileCount["P5A"] > 0 {
+			return []string{tile, tile, "P5A"}, true
 		}
 	}
 
-	return nil
+	return nil, false
 }
 
-func sortAllSuit(hand *types.PostHandScore) (*types.HandSuits, error) {
-	var sortedHand types.HandSuits
-	err := sortBySuit(hand.Hand.Menzen, &sortedHand.Menzen)
-	if err != nil {
-		return nil, err
-	}
-	err = sortBySuit(hand.Hand.Chi, &sortedHand.Chi)
-	if err != nil {
-		return nil, err
-	}
-	err = sortBySuit(hand.Hand.Pon, &sortedHand.Pon)
-	if err != nil {
-		return nil, err
-	}
-	err = sortBySuit(hand.Hand.Kan, &sortedHand.Kan)
-	if err != nil {
-		return nil, err
-	}
-	err = sortBySuit(hand.Hand.Ankan, &sortedHand.Ankan)
-	if err != nil {
-		return nil, err
+func validKantsu(tileCount map[string]int, tile string) ([]string, bool) {
+	if tileCount[tile] == 4 {
+		return []string{tile, tile, tile, tile}, true
+	} else if tileCount[tile] == 3 {
+		if tile == "M5" && tileCount["M5A"] > 0 {
+			return []string{tile, tile, tile, "M5A"}, true
+		} else if tile == "S5" && tileCount["S5A"] > 0 {
+			return []string{tile, tile, tile, "S5A"}, true
+		} else if tile == "P5" && tileCount["P5A"] > 0 {
+			return []string{tile, tile, tile, "P5A"}, true
+		}
 	}
 
-	return &sortedHand, nil
+	return nil, false
 }

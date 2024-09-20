@@ -31,6 +31,12 @@ type HandParts struct {
 	Agari  string   `json:"agari"`
 }
 
+// point return
+type ReturnHandScore struct {
+	Hand      *HandPartsBlocks `json:"hand"`
+	HandScore *Score           `json:"handscore"`
+}
+
 type HandPartsBlocks struct {
 	Menzen SuitBlocks `json:"menzen"`
 	Chi    SuitBlocks `json:"chi"`
@@ -46,33 +52,12 @@ type SuitBlocks struct {
 	Jihai [][]string `json:"jihai"`
 }
 
-type HandSuits struct {
-	Menzen Suits `json:"menzen"`
-	Chi    Suits `json:"chi"`
-	Pon    Suits `json:"pon"`
-	Kan    Suits `json:"kan"`
-	Ankan  Suits `json:"ankan"`
-}
-
-type Suits struct {
-	Manzu []string `json:"manzu"`
-	Souzu []string `json:"souzu"`
-	Pinzu []string `json:"pinzu"`
-	Jihai []string `json:"jihai"`
-}
-
-// point return
-type ReturnHandScore struct {
-	Hand      *HandPartsBlocks `json:"hand"`
-	HandScore *Score           `json:"handscore"`
-}
-
 type Score struct {
 	Han        int             `json:"han"`
 	Fu         int             `json:"fu"`
 	Score      int             `json:"score"`
 	ScoreType  string          `json:"scoretype"`
-	Yaku       []*YakuComponet `json:"yaku"`
+	Yaku       []*YakuComponet `json:"yakucomponet"`
 	FuComponet []*FuComponet   `json:"fucomponet"`
 }
 

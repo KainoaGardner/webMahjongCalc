@@ -10,15 +10,15 @@ func CheckValidData(hand *types.PostHandScore) error {
 	if err != nil {
 		return err
 	}
-	err = checkMinMenzenTiles(hand)
+	err = checkMinMenzenTiles(hand.Hand)
 	if err != nil {
 		return err
 	}
-	err = checkTotalTileAmount(hand)
+	err = checkTotalTileAmount(hand.Hand)
 	if err != nil {
 		return err
 	}
-	err = checkCallTileMultiples(hand)
+	err = checkCallTileMultiples(hand.Hand)
 	if err != nil {
 		return err
 	}
@@ -38,30 +38,30 @@ func CheckValidData(hand *types.PostHandScore) error {
 	return nil
 }
 
-func checkMinMenzenTiles(hand *types.PostHandScore) error {
-	if len(hand.Hand.Menzen) <= 1 {
+func checkMinMenzenTiles(hand *types.HandParts) error {
+	if len(hand.Menzen) <= 1 {
 		return fmt.Errorf("Must have at least 2 menzen tiles")
 	}
 	return nil
 }
 
-func checkCallTileMultiples(hand *types.PostHandScore) error {
-	if len(hand.Hand.Chi)%3 != 0 || len(hand.Hand.Pon)%3 != 0 {
+func checkCallTileMultiples(hand *types.HandParts) error {
+	if len(hand.Chi)%3 != 0 || len(hand.Pon)%3 != 0 {
 		return fmt.Errorf("Calls Chi and Pon must be multiple of 3")
 	}
-	if len(hand.Hand.Kan)%4 != 0 || len(hand.Hand.Ankan)%4 != 0 {
+	if len(hand.Kan)%4 != 0 || len(hand.Ankan)%4 != 0 {
 		return fmt.Errorf("Calls Kan and Ankan must be multiple of 4")
 	}
 
 	return nil
 }
 
-func checkTotalTileAmount(hand *types.PostHandScore) error {
-	menzenLen := len(hand.Hand.Menzen)
-	chiLen := len(hand.Hand.Chi)
-	ponLen := len(hand.Hand.Pon)
-	kanLen := len(hand.Hand.Kan)
-	ankanLen := len(hand.Hand.Ankan)
+func checkTotalTileAmount(hand *types.HandParts) error {
+	menzenLen := len(hand.Menzen)
+	chiLen := len(hand.Chi)
+	ponLen := len(hand.Pon)
+	kanLen := len(hand.Kan)
+	ankanLen := len(hand.Ankan)
 
 	//get total tileAmount
 	//subtact 1 for each kan group
@@ -161,7 +161,13 @@ func checkAgari(hand *types.PostHandScore) error {
 	}
 	if !types.Tiles[hand.Hand.Agari] {
 		return fmt.Errorf("%s is not a valid agari tile", hand.Hand.Agari)
+	}
+
+	for _, tile := range hand.Hand.Menzen {
+		if tile == hand.Hand.Agari {
+			return nil
+		}
 
 	}
-	return nil
+	return fmt.Errorf("%s Agari tile must be in your hand", hand.Hand.Agari)
 }
