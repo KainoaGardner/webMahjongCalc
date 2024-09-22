@@ -5,21 +5,8 @@ type HandObject interface {
 
 // point post
 type PostHandScore struct {
-	Hand    *HandParts `json:"hand"`
-	Dora    []string   `json:"dora"`
-	Bakaze  string     `json:"bakaze"`
-	Jikaze  string     `json:"jikaze"`
-	Ron     bool       `json:"ron"`
-	Tsumo   bool       `json:"tsumo"`
-	Riichi  bool       `json:"riichi"`
-	Wriichi bool       `json:"wriichi"`
-	Ippatsu bool       `json:"ippatsu"`
-	Chankan bool       `json:"chankan"`
-	Rinshan bool       `json:"rinshan"`
-	Haitei  bool       `json:"haitei"`
-	Tenhou  bool       `json:"tenhou"`
-	Chihou  bool       `json:"chihou"`
-	Renchan int        `json:"renchan"`
+	Hand         *HandParts        `json:"hand"`
+	ScoringParts *HandScoringParts `json:"scoringParts"`
 }
 
 type HandParts struct {
@@ -31,10 +18,36 @@ type HandParts struct {
 	Agari  string   `json:"agari"`
 }
 
+type HandScoringParts struct {
+	Dora    []string `json:"dora"`
+	Oya     bool     `json:"oya"`
+	Bakaze  string   `json:"bakaze"`
+	Jikaze  string   `json:"jikaze"`
+	Ron     bool     `json:"ron"`
+	Tsumo   bool     `json:"tsumo"`
+	Riichi  bool     `json:"riichi"`
+	Wriichi bool     `json:"wriichi"`
+	Ippatsu bool     `json:"ippatsu"`
+	Chankan bool     `json:"chankan"`
+	Rinshan bool     `json:"rinshan"`
+	Haitei  bool     `json:"haitei"`
+	Houtei  bool     `json:"houtei"`
+	Tenhou  bool     `json:"tenhou"`
+	Chihou  bool     `json:"chihou"`
+	Honba   int      `json:"honba"`
+}
+
 // point return
 type ReturnHandScore struct {
 	Hand      *HandPartsBlocks `json:"hand"`
-	HandScore *Score           `json:"handscore"`
+	HandScore *Score           `json:"handScore"`
+}
+
+type WinningHand struct {
+	Hand         [][]string        `json:"hand"`
+	Open         bool              `json:"open"`
+	ScoringParts *HandScoringParts `json:"scoringParts"`
+	HandScore    *Score            `json:"handScore"`
 }
 
 type HandPartsBlocks struct {
@@ -53,12 +66,13 @@ type SuitBlocks struct {
 }
 
 type Score struct {
-	Han        int             `json:"han"`
-	Fu         int             `json:"fu"`
-	Score      int             `json:"score"`
-	ScoreType  string          `json:"scoretype"`
-	Yaku       []*YakuComponet `json:"yakucomponet"`
-	FuComponet []*FuComponet   `json:"fucomponet"`
+	Han       int    `json:"han"`
+	Fu        int    `json:"fu"`
+	Score     int    `json:"score"`
+	ScoreType string `json:"scoreType"`
+	Payments  []int
+	YakuList  []*YakuComponet `json:"yakuList"`
+	FuList    []*FuComponet   `json:"fuList"`
 }
 
 type YakuComponet struct {
@@ -68,7 +82,7 @@ type YakuComponet struct {
 
 type FuComponet struct {
 	Title  string `json:"title"`
-	Amount int    `json:"Amount"`
+	Amount int    `json:"amount"`
 }
 
 // H (1,2,3,4 = ton,nan,sha,pei)  (5 6 7 = haku,hatsu,chun)

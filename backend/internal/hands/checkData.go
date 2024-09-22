@@ -18,11 +18,11 @@ func CheckValidData(hand *types.PostHandScore) error {
 	if err != nil {
 		return err
 	}
-	err = checkCallTileMultiples(hand.Hand)
+	err = checkEachTileAmount(hand)
 	if err != nil {
 		return err
 	}
-	err = checkEachTileAmount(hand)
+	err = checkCallTileMultiples(hand.Hand)
 	if err != nil {
 		return err
 	}
@@ -30,7 +30,7 @@ func CheckValidData(hand *types.PostHandScore) error {
 	if err != nil {
 		return err
 	}
-	err = checkKaze(hand)
+	err = checkKaze(hand.ScoringParts)
 	if err != nil {
 		return err
 	}
@@ -91,7 +91,7 @@ func checkEachTileAmount(hand *types.PostHandScore) error {
 	getEachTileAmount(hand.Hand.Pon, count)
 	getEachTileAmount(hand.Hand.Kan, count)
 	getEachTileAmount(hand.Hand.Ankan, count)
-	getEachTileAmount(hand.Dora, count)
+	getEachTileAmount(hand.ScoringParts.Dora, count)
 
 	for _, total := range count {
 		if total > 4 {
@@ -132,7 +132,7 @@ func checkValidTiles(hand *types.PostHandScore) error {
 	if err != nil {
 		return err
 	}
-	err = checkValidTile(hand.Dora)
+	err = checkValidTile(hand.ScoringParts.Dora)
 	if err != nil {
 		return err
 	}
@@ -141,7 +141,7 @@ func checkValidTiles(hand *types.PostHandScore) error {
 
 }
 
-func checkKaze(hand *types.PostHandScore) error {
+func checkKaze(hand *types.HandScoringParts) error {
 	var kaze = map[string]bool{
 		"H1": true,
 		"H2": true,
@@ -156,9 +156,10 @@ func checkKaze(hand *types.PostHandScore) error {
 }
 
 func checkAgari(hand *types.PostHandScore) error {
-	if !hand.Ron && !hand.Tsumo {
+	if !hand.ScoringParts.Ron && !hand.ScoringParts.Tsumo {
 		return fmt.Errorf("Must have agari type ron or tsumo")
 	}
+
 	if !types.Tiles[hand.Hand.Agari] {
 		return fmt.Errorf("%s is not a valid agari tile", hand.Hand.Agari)
 	}
