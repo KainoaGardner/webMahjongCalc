@@ -159,6 +159,9 @@ func checkAgari(hand *types.PostHandScore) error {
 	if !hand.ScoringParts.Ron && !hand.ScoringParts.Tsumo {
 		return fmt.Errorf("Must have agari type ron or tsumo")
 	}
+	if hand.ScoringParts.Ron && hand.ScoringParts.Tsumo {
+		return fmt.Errorf("Must only one agari type ron or tsumo")
+	}
 
 	if !types.Tiles[hand.Hand.Agari] {
 		return fmt.Errorf("%s is not a valid agari tile", hand.Hand.Agari)

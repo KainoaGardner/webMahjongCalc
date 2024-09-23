@@ -26,3 +26,10 @@ func WriteError(w http.ResponseWriter, status int, err error) {
 	WriteJSON(w, status, map[string]string{"error": err.Error()})
 
 }
+
+func CeilHundred(x int) int {
+	if x%100 != 0 {
+		return x + 100 - (x % 100)
+	}
+	return x
+}

@@ -2,26 +2,33 @@ package hands
 
 import (
 	"fmt"
+	"github.com/KainoaGardner/webMahjongCalc/types"
 	"maps"
 	"strings"
-
-	"github.com/KainoaGardner/webMahjongCalc/types"
 )
 
 func GetValidHands(hand *types.HandParts) ([][][]string, error) {
-
-	//check kokushi
-
-	//check chiitoitsu
-
 	//first menzen
 	totalTileCount := make(map[string]int)
+	var potentialHands [][][]string
 
 	akaDora := getAllAkaDora(*hand)
 
 	//mentsu
 	tileCount := getTileMap(hand.Menzen)
 	addToTileMap(totalTileCount, hand.Menzen)
+
+	//check kokushi
+	kokushiHand, ok := checkKokushimusou(tileCount)
+	if ok {
+		potentialHands = append(potentialHands, kokushiHand)
+	}
+
+	//check chiitoitsu
+	chiitoitsuHand, ok := checkChiitoitsu(tileCount)
+	if ok {
+		potentialHands = append(potentialHands, chiitoitsuHand)
+	}
 
 	heads := getHeads(tileCount)
 	mentsu := getMentsu(tileCount)
@@ -44,7 +51,7 @@ func GetValidHands(hand *types.HandParts) ([][][]string, error) {
 	mentsu = appendKanMentsu(tileCount, mentsu)
 
 	//check valid hands
-	potentialHands, err := getPotentialHands(heads, mentsu)
+	potentialHands, err := getPotentialHands(potentialHands, heads, mentsu)
 	if err != nil {
 		return nil, err
 	}
@@ -201,17 +208,16 @@ func appendKanMentsu(tileCount map[string]int, mentsu [][]string) [][]string {
 	return mentsu
 }
 
-func getPotentialHands(heads [][]string, mentsu [][]string) ([][][]string, error) {
-	var result [][][]string
+func getPotentialHands(potentialHands [][][]string, heads [][]string, mentsu [][]string) ([][][]string, error) {
 	sortMentsu(mentsu)
 
 	for i := 0; i < len(heads); i++ {
-		_, result = btPotentialHands(0, mentsu, [][]string{heads[i]}, result)
+		_, potentialHands = btPotentialHands(0, mentsu, [][]string{heads[i]}, potentialHands)
 	}
-	if len(result) == 0 {
+	if len(potentialHands) == 0 {
 		return nil, fmt.Errorf("No vaild potentialhands")
 	}
-	return result, nil
+	return potentialHands, nil
 }
 
 func btPotentialHands(index int, mentsu [][]string, hand [][]string, result [][][]string) ([][]string, [][][]string) {
@@ -320,4 +326,39 @@ func replaceAkaDora(dora string, validHand [][]string) {
 		}
 	}
 
+}
+
+func checkKokushimusou(tileCount map[string]int) ([][]string, bool) {
+	kokushi := []string{"H1", "H2", "H3", "H4", "H5", "H6", "H7", "M1", "M9", "S1", "S9", "P1", "P9"}
+	var kokushiHand [][]string
+
+	//check at least one of each honor terminal
+	for _, tile := range kokushi {
+		if tileCount[tile] < 1 {
+			return nil, false
+		}
+
+		kokushiHand = append(kokushiHand, []string{tile})
+	}
+
+	//check at least 1 has more than 1
+	for i, tile := range kokushi {
+		if tileCount[tile] > 1 {
+			kokushiHand[i] = append(kokushiHand[i], tile)
+			return kokushiHand, true
+		}
+	}
+
+	return nil, false
+}
+
+func checkChiitoitsu(tileCount map[string]int) ([][]string, bool) {
+	var chiitoitsuHand [][]string
+	for tile, count := range tileCount {
+		if count != 2 {
+			return nil, false
+		}
+		chiitoitsuHand = append(chiitoitsuHand, []string{tile, tile})
+	}
+	return chiitoitsuHand, true
 }

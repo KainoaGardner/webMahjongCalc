@@ -35,6 +35,7 @@ type HandScoringParts struct {
 	Tenhou  bool     `json:"tenhou"`
 	Chihou  bool     `json:"chihou"`
 	Honba   int      `json:"honba"`
+	Kiriage bool     `json:"kiriage"`
 }
 
 // point return
@@ -66,13 +67,16 @@ type SuitBlocks struct {
 }
 
 type Score struct {
-	Han       int    `json:"han"`
-	Fu        int    `json:"fu"`
-	Score     int    `json:"score"`
-	ScoreType string `json:"scoreType"`
-	Payments  []int
-	YakuList  []*YakuComponet `json:"yakuList"`
-	FuList    []*FuComponet   `json:"fuList"`
+	Han         int                `json:"han"`
+	Fu          int                `json:"fu"`
+	YakuMan     int                `json:"yakuman"`
+	Score       int                `json:"score"`
+	ScoreType   string             `json:"scoreType"`
+	OyaPayment  int                `json:"oyaPayment"`
+	KoPayment   int                `json:"koPayment"`
+	YakuList    []*YakuComponet    `json:"yakuList"`
+	FuList      []*FuComponet      `json:"fuList"`
+	YakumanList []*YakumanComponet `json:"yakumanList"`
 }
 
 type YakuComponet struct {
@@ -81,8 +85,13 @@ type YakuComponet struct {
 }
 
 type FuComponet struct {
-	Title  string `json:"title"`
-	Amount int    `json:"amount"`
+	Title string `json:"title"`
+	Fu    int    `json:"fu"`
+}
+
+type YakumanComponet struct {
+	Title   string `json:"title"`
+	Yakuman int    `json:"yakuman"`
 }
 
 // H (1,2,3,4 = ton,nan,sha,pei)  (5 6 7 = haku,hatsu,chun)
