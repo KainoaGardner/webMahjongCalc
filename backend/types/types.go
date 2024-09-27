@@ -18,6 +18,15 @@ type HandParts struct {
 	Agari  string   `json:"agari"`
 }
 
+type HandPartBlocks struct {
+	Menzen [][]string `json:"menzen"`
+	Chi    [][]string `json:"chi"`
+	Pon    [][]string `json:"pon"`
+	Kan    [][]string `json:"kan"`
+	Ankan  [][]string `json:"ankan"`
+	Agari  string     `json:"agari"`
+}
+
 type HandScoringParts struct {
 	Dora    []string `json:"dora"`
 	Oya     bool     `json:"oya"`
@@ -33,25 +42,25 @@ type HandScoringParts struct {
 	Haitei  bool     `json:"haitei"`
 	Houtei  bool     `json:"houtei"`
 	Tenhou  bool     `json:"tenhou"`
-	Chihou  bool     `json:"chihou"`
+	Chiihou bool     `json:"chiihou"`
 	Honba   int      `json:"honba"`
 	Kiriage bool     `json:"kiriage"`
 }
 
 // point return
 type ReturnHandScore struct {
-	Hand      *HandPartsBlocks `json:"hand"`
-	HandScore *Score           `json:"handScore"`
+	Hand      *HandPartBlocks `json:"hand"`
+	HandScore *Score          `json:"handScore"`
 }
 
 type WinningHand struct {
 	Hand         [][]string        `json:"hand"`
-	Open         bool              `json:"open"`
+	HandParts    *HandPartBlocks   `json:"handPartBlocks"`
 	ScoringParts *HandScoringParts `json:"scoringParts"`
 	HandScore    *Score            `json:"handScore"`
 }
 
-type HandPartsBlocks struct {
+type HandPartSuits struct {
 	Menzen SuitBlocks `json:"menzen"`
 	Chi    SuitBlocks `json:"chi"`
 	Pon    SuitBlocks `json:"pon"`
@@ -69,7 +78,7 @@ type SuitBlocks struct {
 type Score struct {
 	Han         int                `json:"han"`
 	Fu          int                `json:"fu"`
-	YakuMan     int                `json:"yakuman"`
+	Yakuman     int                `json:"yakuman"`
 	Score       int                `json:"score"`
 	ScoreType   string             `json:"scoreType"`
 	OyaPayment  int                `json:"oyaPayment"`

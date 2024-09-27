@@ -5,7 +5,7 @@ import (
 	"github.com/KainoaGardner/webMahjongCalc/types"
 )
 
-func CheckValidData(hand *types.PostHandScore) error {
+func checkValidData(hand *types.PostHandScore) error {
 	err := checkAgari(hand)
 	if err != nil {
 		return err

@@ -7,12 +7,10 @@ import (
 	"strings"
 )
 
-func GetValidHands(hand *types.HandParts) ([][][]string, error) {
+func getValidHands(hand *types.HandParts) ([]types.WinningHand, error) {
 	//first menzen
 	totalTileCount := make(map[string]int)
 	var potentialHands [][][]string
-
-	akaDora := getAllAkaDora(*hand)
 
 	//mentsu
 	tileCount := getTileMap(hand.Menzen)
@@ -59,32 +57,20 @@ func GetValidHands(hand *types.HandParts) ([][][]string, error) {
 	validHands := filterPotentialHands(potentialHands, totalTileCount)
 
 	//add akadora back
-	replaceAllAkadora(akaDora, validHands)
 
-	return validHands, nil
-}
-
-func addToTileMap(tileMap map[string]int, handPart []string) {
-	for _, tile := range handPart {
-		tileMap[tile[:2]] += 1
+	formattedHands, err := formatHands(validHands, hand)
+	if err != nil {
+		return nil, err
 	}
-}
 
-func getTileMap(handPart []string) map[string]int {
-	tileCount := make(map[string]int)
-	addToTileMap(tileCount, handPart)
-	return tileCount
-}
+	akaDora := getAllAkaDora(*hand)
+	handParts := [][]string{hand.Menzen, hand.Chi, hand.Pon, hand.Kan, hand.Ankan}
+	err = replaceAllAkadora(akaDora, formattedHands, handParts)
+	if err != nil {
+		return nil, err
+	}
 
-func getAllAkaDora(hand types.HandParts) []string {
-	var akaDora []string
-	akaDora = getAkaDora(akaDora, hand.Menzen)
-	akaDora = getAkaDora(akaDora, hand.Chi)
-	akaDora = getAkaDora(akaDora, hand.Pon)
-	akaDora = getAkaDora(akaDora, hand.Kan)
-	akaDora = getAkaDora(akaDora, hand.Ankan)
-
-	return akaDora
+	return formattedHands, nil
 }
 
 func getAkaDora(akaDora []string, part []string) []string {
@@ -307,27 +293,6 @@ func removeHandByIndex(potentialHands [][][]string, index int) [][][]string {
 	return potentialHands[:len(potentialHands)-1]
 }
 
-func replaceAllAkadora(akaDora []string, validHands [][][]string) {
-	for _, dora := range akaDora {
-		for _, validHand := range validHands {
-			replaceAkaDora(dora, validHand)
-		}
-	}
-}
-
-func replaceAkaDora(dora string, validHand [][]string) {
-	for i, block := range validHand {
-		for j, tile := range block {
-			if tile == dora[:2] {
-				validHand[i][j] = dora
-
-				return
-			}
-		}
-	}
-
-}
-
 func checkKokushimusou(tileCount map[string]int) ([][]string, bool) {
 	kokushi := []string{"H1", "H2", "H3", "H4", "H5", "H6", "H7", "M1", "M9", "S1", "S9", "P1", "P9"}
 	var kokushiHand [][]string
@@ -361,4 +326,140 @@ func checkChiitoitsu(tileCount map[string]int) ([][]string, bool) {
 		chiitoitsuHand = append(chiitoitsuHand, []string{tile, tile})
 	}
 	return chiitoitsuHand, true
+}
+
+func formatHands(validHands [][][]string, hand *types.HandParts) ([]types.WinningHand, error) {
+	formattedHands := []types.WinningHand{}
+
+	for _, validHand := range validHands {
+		formattedHand := types.WinningHand{
+			Hand:      validHand,
+			HandParts: &types.HandPartBlocks{},
+			HandScore: &types.Score{},
+		}
+
+		menTileCount := getTileMap(hand.Menzen)
+		var menzen [][]string
+		chiTileCount := getTileMap(hand.Chi)
+		var chi [][]string
+		ponTileCount := getTileMap(hand.Pon)
+		var pon [][]string
+		kanTileCount := getTileMap(hand.Kan)
+		var kan [][]string
+		ankanTileCount := getTileMap(hand.Ankan)
+		var ankan [][]string
+
+		tileCounts := []map[string]int{menTileCount, chiTileCount, ponTileCount, kanTileCount, ankanTileCount}
+
+		handParts := [][][]string{menzen, chi, pon, kan, ankan}
+
+		for i := len(validHand) - 1; i >= 0; i-- {
+			handParts = addBlockToParts(validHand[i], tileCounts, handParts)
+
+		}
+
+		formattedHand.HandParts.Menzen = handParts[0] //menzen
+		formattedHand.HandParts.Chi = handParts[1]    //chi
+		formattedHand.HandParts.Pon = handParts[2]    //pon
+		formattedHand.HandParts.Kan = handParts[3]    //kan
+		formattedHand.HandParts.Ankan = handParts[4]  //ankan
+
+		formattedHands = append(formattedHands, formattedHand)
+
+	}
+
+	return formattedHands, nil
+}
+
+func addBlockToParts(block []string, tileCounts []map[string]int, handParts [][][]string) [][][]string {
+	blockTileCount := getTileMap(block)
+
+	for i := 0; i < len(handParts); i++ {
+		if checkAddBlockToPart(blockTileCount, tileCounts[i]) {
+			handParts[i] = append(handParts[i], block)
+			for tile, amount := range blockTileCount {
+				tileCounts[i][tile] -= amount
+			}
+			break
+		}
+	}
+
+	return handParts
+}
+
+func checkAddBlockToPart(blockTileCount map[string]int, tileCount map[string]int) bool {
+	for tile, amount := range blockTileCount {
+		if tileCount[tile] < amount {
+			return false
+		}
+	}
+
+	return true
+}
+
+func getAllAkaDora(hand types.HandParts) []string {
+	var akaDora []string
+	akaDora = getAkaDora(akaDora, hand.Menzen)
+	akaDora = getAkaDora(akaDora, hand.Chi)
+	akaDora = getAkaDora(akaDora, hand.Pon)
+	akaDora = getAkaDora(akaDora, hand.Kan)
+	akaDora = getAkaDora(akaDora, hand.Ankan)
+
+	return akaDora
+}
+
+func replaceAllAkadora(akaDoraList []string, winningHands []types.WinningHand, handParts [][]string) error {
+	for _, akaDora := range akaDoraList {
+		akaDoraPart, err := getAkaDoraPart(akaDora, handParts)
+		if err != nil {
+			return err
+		}
+		for _, winningHand := range winningHands {
+			switch akaDoraPart {
+			case 0:
+				replaceAkaDora(akaDora, winningHand.HandParts.Menzen)
+			case 1:
+				replaceAkaDora(akaDora, winningHand.HandParts.Chi)
+			case 2:
+				replaceAkaDora(akaDora, winningHand.HandParts.Pon)
+			case 3:
+				replaceAkaDora(akaDora, winningHand.HandParts.Kan)
+			case 4:
+				replaceAkaDora(akaDora, winningHand.HandParts.Ankan)
+			default:
+				return fmt.Errorf("Cant find akadora part for %s", akaDora)
+
+			}
+
+		}
+
+	}
+	return nil
+}
+
+func getAkaDoraPart(akaDora string, handParts [][]string) (int, error) {
+	for i, part := range handParts {
+		for _, tile := range part {
+			if tile == akaDora {
+				return i, nil
+			}
+		}
+
+	}
+
+	return 0, fmt.Errorf("Cant find akadora part for %s", akaDora)
+
+}
+
+func replaceAkaDora(dora string, handPart [][]string) {
+	for i, block := range handPart {
+		for j, tile := range block {
+			if tile == dora[:2] {
+				handPart[i][j] = dora
+
+				return
+			}
+		}
+	}
+
 }
