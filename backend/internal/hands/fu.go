@@ -13,7 +13,7 @@ func GetFu(currentHand *types.WinningHand) {
 }
 
 func menzenKafu(currentHand *types.WinningHand) {
-	if !CheckOpenHand(currentHand) && currentHand.ScoringParts.Ron {
+	if !checkOpenHand(currentHand) && currentHand.ScoringParts.Ron {
 		FuAdded := types.FuComponet{Fu: 10, Title: "Menzen Kafu"}
 		currentHand.HandScore.FuList = append(currentHand.HandScore.FuList, &FuAdded)
 	}
