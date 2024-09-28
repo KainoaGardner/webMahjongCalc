@@ -4,29 +4,26 @@ import (
 	"github.com/KainoaGardner/webMahjongCalc/types"
 )
 
-func getYakuman(hand *types.WinningHand) error {
+func getYakuman(hand *types.WinningHand) {
 	tenhou(hand)
 	chiihou(hand)
 	suuankou(hand)
 	kokushimusou(hand)
-
+	chuurenpoutou(hand)
 	daisangen(hand)
+	daishousuushi(hand)
 	tsuuiisou(hand)
 	chinroutou(hand)
 	ryuuiisou(hand)
 	suukantsu(hand)
 
-	//not done
-	chuurenpoutou(hand)
-	shousuushi(hand)
-	daisuushi(hand)
-
-	return nil
-
 }
 
 func tenhou(hand *types.WinningHand) {
-	if hand.ScoringParts.Tenhou && !checkOpenHand(hand) {
+	if checkOpenHand(hand) {
+		return
+	}
+	if hand.ScoringParts.Tenhou {
 		tenhou := types.YakumanComponet{Yakuman: 1, Title: "Tenhou"}
 		hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &tenhou)
 	}
@@ -34,7 +31,10 @@ func tenhou(hand *types.WinningHand) {
 }
 
 func chiihou(hand *types.WinningHand) {
-	if hand.ScoringParts.Tenhou && !checkOpenHand(hand) {
+	if checkOpenHand(hand) {
+		return
+	}
+	if hand.ScoringParts.Tenhou {
 		chiihou := types.YakumanComponet{Yakuman: 1, Title: "Chiihou"}
 		hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &chiihou)
 	}
@@ -63,20 +63,22 @@ func suuankou(hand *types.WinningHand) {
 }
 
 func kokushimusou(hand *types.WinningHand) {
-	if !checkOpenHand(hand) {
-		unsortedHand := getUnsortedHand(hand)
-		handCount := getTileMap(unsortedHand)
+	if checkOpenHand(hand) {
+		return
+	}
+	unsortedHand := getUnsortedHand(hand)
+	handCount := getTileMap(unsortedHand)
 
-		if checkKokushiAllTiles(handCount) {
-			if checkKokushiThirteenWait(hand.HandParts) {
-				kokushiJuusanmen := types.YakumanComponet{Yakuman: 2, Title: "Kokushimusou Juusanmenmachi"}
-				hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &kokushiJuusanmen)
-			} else {
-				kokushi := types.YakumanComponet{Yakuman: 1, Title: "Kokushimusou"}
-				hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &kokushi)
-			}
+	if checkKokushiAllTiles(handCount) {
+		if checkKokushiThirteenWait(hand.HandParts) {
+			kokushiJuusanmen := types.YakumanComponet{Yakuman: 2, Title: "Kokushimusou Juusanmenmachi"}
+			hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &kokushiJuusanmen)
+		} else {
+			kokushi := types.YakumanComponet{Yakuman: 1, Title: "Kokushimusou"}
+			hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &kokushi)
 		}
 	}
+
 }
 
 func checkKokushiAllTiles(handCount map[string]int) bool {
@@ -107,18 +109,50 @@ func checkKokushiThirteenWait(handParts *types.HandPartBlocks) bool {
 }
 
 func chuurenpoutou(hand *types.WinningHand) {
-	if !checkOpenHand(hand) {
+	if checkOpenHand(hand) {
+		return
+	}
 
-		var suit byte
-		tileCount := make(map[byte]int)
-		for _, block := range hand.Hand {
-			for _, tile := range block {
-				if suit != 0 && tile[0] != suit {
+	var suit byte
+	tileCount := make(map[byte]int)
+	for _, block := range hand.Hand {
+		for _, tile := range block {
+			if suit != 0 && tile[0] != suit {
+				return
+			}
+			tileCount[tile[1]]++
+			suit = tile[0]
+		}
+	}
+
+	for tile, amount := range tileCount {
+		if tile == '1' || tile == '9' {
+			if amount < 3 {
+				return
+			} else {
+				if amount < 1 {
 					return
 				}
-				tileCount[tile[1]]++
-				suit = tile[0]
 			}
+		}
+	}
+
+	chuuren := types.YakumanComponet{Yakuman: 1, Title: "Chuuren Poutou"}
+	junseichuuren := types.YakumanComponet{Yakuman: 2, Title: "Junsei Chuuren Poutou"}
+
+	agariNumber := hand.HandParts.Agari[1]
+	if agariNumber == '1' || agariNumber == '9' {
+		if tileCount[agariNumber] == 4 {
+			hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &junseichuuren)
+		} else {
+			hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &chuuren)
+		}
+
+	} else {
+		if tileCount[agariNumber] == 2 {
+			hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &junseichuuren)
+		} else {
+			hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &chuuren)
 		}
 
 	}
@@ -146,11 +180,35 @@ func daisangen(hand *types.WinningHand) {
 	}
 }
 
-func shousuushi(hand *types.WinningHand) {
+func daishousuushi(hand *types.WinningHand) {
+	var kazeTiles = map[string]bool{
+		"H1": true,
+		"H2": true,
+		"H3": true,
+		"H4": true,
+	}
 
-}
+	kaze := [][]string{}
+	for _, block := range hand.Hand {
+		if !kazeTiles[block[0]] {
+			return
+		}
 
-func daisuushi(hand *types.WinningHand) {
+		kaze = append(kaze, block)
+
+	}
+
+	if len(kaze) == 4 {
+		for _, block := range kaze {
+			if len(block) == 2 {
+				shousuushi := types.YakumanComponet{Yakuman: 1, Title: "Shousuushi"}
+				hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &shousuushi)
+				return
+			}
+		}
+		daisuushi := types.YakumanComponet{Yakuman: 2, Title: "Daisuushi"}
+		hand.HandScore.YakumanList = append(hand.HandScore.YakumanList, &daisuushi)
+	}
 
 }
 

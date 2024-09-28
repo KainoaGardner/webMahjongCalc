@@ -15,7 +15,6 @@ type HandParts struct {
 	Pon    []string `json:"pon"`
 	Kan    []string `json:"kan"`
 	Ankan  []string `json:"ankan"`
-	Agari  string   `json:"agari"`
 }
 
 type HandPartBlocks struct {

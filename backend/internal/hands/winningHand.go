@@ -337,6 +337,7 @@ func formatHands(validHands [][][]string, hand *types.HandParts) ([]types.Winnin
 			HandParts: &types.HandPartBlocks{},
 			HandScore: &types.Score{},
 		}
+		formattedHand.HandParts.Agari = hand.Menzen[len(hand.Menzen)-1]
 
 		menTileCount := getTileMap(hand.Menzen)
 		var menzen [][]string

@@ -35,12 +35,17 @@ func checkValidData(hand *types.PostHandScore) error {
 		return err
 	}
 
+	err = checkMultipleAkaDora(hand)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func checkMinMenzenTiles(hand *types.HandParts) error {
-	if len(hand.Menzen) <= 1 {
-		return fmt.Errorf("Must have at least 2 menzen tiles")
+	if len(hand.Menzen) < 1 {
+		return fmt.Errorf("Must have at least 1 menzen tile")
 	}
 	return nil
 }
@@ -76,10 +81,7 @@ func checkTotalTileAmount(hand *types.HandParts) error {
 func getEachTileAmount(tiles []string, count map[string]int) {
 	for _, tile := range tiles {
 		//if aka count as normal
-		if tile == "M5A" || tile == "S5A" || tile == "P5A" {
-			tile = tile[:len(tile)-1]
-		}
-		count[tile] += 1
+		count[tile[:2]] += 1
 	}
 }
 
@@ -163,15 +165,32 @@ func checkAgari(hand *types.PostHandScore) error {
 		return fmt.Errorf("Must only one agari type ron or tsumo")
 	}
 
-	if !types.Tiles[hand.Hand.Agari] {
-		return fmt.Errorf("%s is not a valid agari tile", hand.Hand.Agari)
-	}
+	return nil
+}
 
-	for _, tile := range hand.Hand.Menzen {
-		if tile == hand.Hand.Agari {
-			return nil
+func getEachTileAkaDora(tiles []string, count map[string]int) {
+	for _, tile := range tiles {
+		if tile == "M5A" || tile == "S5A" || tile == "P5A" {
+			count[tile] += 1
+		}
+	}
+}
+
+func checkMultipleAkaDora(hand *types.PostHandScore) error {
+	count := make(map[string]int)
+
+	getEachTileAkaDora(hand.Hand.Menzen, count)
+	getEachTileAkaDora(hand.Hand.Chi, count)
+	getEachTileAkaDora(hand.Hand.Pon, count)
+	getEachTileAkaDora(hand.Hand.Kan, count)
+	getEachTileAkaDora(hand.Hand.Ankan, count)
+	getEachTileAkaDora(hand.ScoringParts.Dora, count)
+
+	for _, amount := range count {
+		if amount > 1 {
+			return fmt.Errorf("Can only have at most 1 of each akadora")
 		}
 
 	}
-	return fmt.Errorf("%s Agari tile must be in your hand", hand.Hand.Agari)
+	return nil
 }

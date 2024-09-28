@@ -30,6 +30,13 @@ func getMaxScoreWin(validHands []types.WinningHand, hand *types.PostHandScore) (
 func getHandScore(currentHand *types.WinningHand) error {
 	//yakuman
 	getYakuman(currentHand)
+
+	getYaku(currentHand)
+	for _, yaku := range currentHand.HandScore.YakuList {
+		fmt.Println(yaku)
+
+	}
+
 	// if currentHand.Yakuman != 0 || len(currentHand.HandScore.YakumanList) != 0 {
 	//
 	// }else
