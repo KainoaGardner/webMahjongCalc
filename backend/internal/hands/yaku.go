@@ -1,17 +1,46 @@
 package hands
 
 import (
+	"fmt"
+
 	"github.com/KainoaGardner/webMahjongCalc/types"
 )
 
 func getYaku(hand *types.WinningHand) {
+
+	//1 han
 	riichi(hand)
-	wriichi(hand)
+	menzentsumo(hand)
 	ippatsu(hand)
 	// pinfu(hand)
-	iiryanpeikou(hand)
+	iiryanpeikou(hand) //check both iipeikou and ryanpeikou
 	tanyao(hand)
 	yakuhai(hand)
+	haitei(hand)
+	houtei(hand)
+	rinshan(hand)
+	chankan(hand)
+
+	//2han
+	wriichi(hand)
+	chiitoitsu(hand)
+	sanshokudoujun(hand)
+	sanshokudoukou(hand)
+	ittsuu(hand)
+	chanta(hand)
+	toitoi(hand)
+	// shousangen(hand)
+	// sanankou(hand)
+	// honroutou(hand)
+	// sankantsu(hand)
+
+	//3 han
+	// ryanpeikou(hand)
+	// honittsu(hand)
+	// junchan(hand)
+
+	//6 han
+	// chinittsu(hand)
 
 }
 
@@ -23,6 +52,16 @@ func riichi(hand *types.WinningHand) {
 	if hand.ScoringParts.Riichi {
 		riichi := types.YakuComponet{Han: 1, Title: "Riichi"}
 		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &riichi)
+	}
+}
+
+func menzentsumo(hand *types.WinningHand) {
+	if checkOpenHand(hand) {
+		return
+	}
+	if hand.ScoringParts.Tsumo {
+		tsumo := types.YakuComponet{Han: 1, Title: "Menzenchin Tsumohou"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &tsumo)
 	}
 }
 
@@ -141,4 +180,177 @@ func yakuhai(hand *types.WinningHand) {
 			}
 		}
 	}
+}
+
+func haitei(hand *types.WinningHand) {
+	if hand.ScoringParts.Haitei && hand.ScoringParts.Tsumo {
+		haitei := types.YakuComponet{Han: 1, Title: "Haitei Raoyue"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &haitei)
+	}
+
+}
+
+func houtei(hand *types.WinningHand) {
+	if hand.ScoringParts.Houtei && hand.ScoringParts.Ron {
+		houtei := types.YakuComponet{Han: 1, Title: "Houtei Raoyui"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &houtei)
+	}
+
+}
+
+func rinshan(hand *types.WinningHand) {
+	if len(hand.HandParts.Kan)+len(hand.HandParts.Ankan) == 0 {
+		return
+	}
+
+	if hand.ScoringParts.Rinshan {
+		rinshan := types.YakuComponet{Han: 1, Title: "Rinshan Kaihou"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &rinshan)
+	}
+
+}
+
+func chankan(hand *types.WinningHand) {
+	if hand.ScoringParts.Ron && hand.ScoringParts.Chankan {
+		chankan := types.YakuComponet{Han: 1, Title: "Chankan"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &chankan)
+	}
+}
+
+func chiitoitsu(hand *types.WinningHand) {
+	if len(hand.Hand) == 7 {
+		chiitoitsu := types.YakuComponet{Han: 2, Title: "Chiitoitsu"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &chiitoitsu)
+	}
+
+}
+
+func sanshokudoujun(hand *types.WinningHand) {
+	shuntsuMap := make(map[string]map[byte]bool)
+
+	for _, block := range hand.Hand {
+		if checkShuntsuBlock(block) {
+			shuntsuString := getBlockString(block)
+			if shuntsuMap[shuntsuString[1:]] == nil {
+				var suitMap = map[byte]bool{'M': false, 'P': false, 'S': false}
+				shuntsuMap[shuntsuString[1:]] = suitMap
+			}
+			shuntsuMap[shuntsuString[1:]][shuntsuString[0]] = true
+		}
+	}
+
+	for _, suits := range shuntsuMap {
+		if suits['M'] && suits['S'] && suits['P'] {
+			sanshoku := types.YakuComponet{Han: 2, Title: "Sanshoku Doujun"}
+			//open 1 han
+			if checkOpenHand(hand) {
+				sanshoku.Han = 1
+			}
+			hand.HandScore.YakuList = append(hand.HandScore.YakuList, &sanshoku)
+			return
+		}
+
+	}
+
+}
+
+func sanshokudoukou(hand *types.WinningHand) {
+	koutsuMap := make(map[string]map[byte]bool)
+
+	for _, block := range hand.Hand {
+		if checkKoutsuBlock(block) {
+			koutsuString := getBlockString(block)[:4]
+			if koutsuMap[koutsuString[1:]] == nil {
+				var suitMap = map[byte]bool{'M': false, 'P': false, 'S': false}
+				koutsuMap[koutsuString[1:]] = suitMap
+			}
+			koutsuMap[koutsuString[1:]][koutsuString[0]] = true
+		}
+	}
+
+	for _, suits := range koutsuMap {
+		if suits['M'] && suits['S'] && suits['P'] {
+			sanshoku := types.YakuComponet{Han: 2, Title: "Sanshoku Doukou"}
+			hand.HandScore.YakuList = append(hand.HandScore.YakuList, &sanshoku)
+			return
+		}
+
+	}
+
+}
+
+func ittsuu(hand *types.WinningHand) {
+	shuntsuMap := make(map[string]bool)
+
+	for _, block := range hand.Hand {
+		if checkShuntsuBlock(block) {
+			shuntsuString := getBlockString(block)
+			shuntsuMap[shuntsuString] = true
+		}
+	}
+
+	for _, suit := range []string{"M", "S", "P"} {
+		a := fmt.Sprintf("%s123", suit)
+		b := fmt.Sprintf("%s456", suit)
+		c := fmt.Sprintf("%s789", suit)
+		if shuntsuMap[a] && shuntsuMap[b] && shuntsuMap[c] {
+			ittsuu := types.YakuComponet{Han: 2, Title: "Ikkitsuukan"}
+
+			if checkOpenHand(hand) {
+				ittsuu.Han = 1
+			}
+			hand.HandScore.YakuList = append(hand.HandScore.YakuList, &ittsuu)
+			return
+		}
+	}
+
+}
+
+func chanta(hand *types.WinningHand) {
+	var terminalHonors = map[string]bool{
+		"H1": true,
+		"H2": true,
+		"H3": true,
+		"H4": true,
+		"H5": true,
+		"H6": true,
+		"H7": true,
+		"M1": true,
+		"M9": true,
+		"S1": true,
+		"S9": true,
+		"P1": true,
+		"P9": true,
+	}
+	for _, block := range hand.Hand {
+		var terminalFound bool
+		for _, tile := range block {
+			if terminalHonors[tile] {
+				terminalFound = true
+			}
+		}
+		if !terminalFound {
+			return
+		}
+	}
+	chanta := types.YakuComponet{Han: 2, Title: "Chanta"}
+
+	if checkOpenHand(hand) {
+		chanta.Han = 1
+	}
+	hand.HandScore.YakuList = append(hand.HandScore.YakuList, &chanta)
+
+}
+
+func toitoi(hand *types.WinningHand) {
+	for _, block := range hand.Hand {
+		if len(block) != 2 {
+			if !checkKoutsuBlock(block) {
+				return
+			}
+		}
+	}
+	toitoi := types.YakuComponet{Han: 2, Title: "Toitoihou"}
+	hand.HandScore.YakuList = append(hand.HandScore.YakuList, &toitoi)
+
 }

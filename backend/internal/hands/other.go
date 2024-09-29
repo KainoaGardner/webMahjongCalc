@@ -46,7 +46,7 @@ func getHead(menzen [][]string) []string {
 func getMenzenKoutsuCount(menzen [][]string) int {
 	var count int
 	for _, block := range menzen {
-		if checkValidKoutsu(block) {
+		if checkKoutsuBlock(block) {
 			count++
 		}
 	}
@@ -54,7 +54,7 @@ func getMenzenKoutsuCount(menzen [][]string) int {
 	return count
 }
 
-func checkValidKoutsu(block []string) bool {
+func checkKoutsuBlock(block []string) bool {
 	if len(block) < 3 {
 		return false
 	}
@@ -65,4 +65,31 @@ func checkValidKoutsu(block []string) bool {
 	}
 
 	return true
+}
+
+func checkShuntsuBlock(block []string) bool {
+	if len(block) != 3 {
+		return false
+	}
+	startNumber := int(block[0][1])
+
+	for i := 1; i < len(block); i++ {
+		if int(block[i][1]) != startNumber+i {
+			return false
+		}
+	}
+
+	return true
+}
+
+func getBlockString(block []string) string {
+	var result string
+	suit := block[0][0]
+	result += string(suit)
+
+	for _, tile := range block {
+		result += string(tile[1])
+	}
+
+	return result
 }
