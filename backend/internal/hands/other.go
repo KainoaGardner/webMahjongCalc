@@ -93,3 +93,15 @@ func getBlockString(block []string) string {
 
 	return result
 }
+
+func removeYaku(hand []*types.YakuComponet, yaku string) []*types.YakuComponet {
+	for i := len(hand) - 1; i >= 0; i-- {
+		if hand[i].Title == yaku {
+			return append(hand[:i], hand[i+1:]...)
+
+		}
+
+	}
+	return hand
+
+}

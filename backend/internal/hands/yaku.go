@@ -29,14 +29,14 @@ func getYaku(hand *types.WinningHand) {
 	ittsuu(hand)
 	chanta(hand)
 	toitoi(hand)
-	// shousangen(hand)
-	// sanankou(hand)
-	// honroutou(hand)
-	// sankantsu(hand)
+	shousangen(hand)
+	// sanankou(hand) //NOT DONE
+	honroutou(hand)
+	sankantsu(hand)
 
 	//3 han
 	// ryanpeikou(hand)
-	// honittsu(hand)
+	honitsu(hand)
 	// junchan(hand)
 
 	//6 han
@@ -353,4 +353,93 @@ func toitoi(hand *types.WinningHand) {
 	toitoi := types.YakuComponet{Han: 2, Title: "Toitoihou"}
 	hand.HandScore.YakuList = append(hand.HandScore.YakuList, &toitoi)
 
+}
+
+func shousangen(hand *types.WinningHand) {
+	if len(hand.Hand) != 5 {
+		return
+	}
+
+	var haku, hatsu, chun bool
+
+	for _, block := range hand.Hand {
+		switch block[0] {
+		case "H5":
+			haku = true
+		case "H6":
+			hatsu = true
+		case "H7":
+			chun = true
+		}
+
+	}
+
+	if haku && hatsu && chun {
+		shousangen := types.YakuComponet{Han: 2, Title: "Shousangen"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &shousangen)
+	}
+}
+
+// not done HARD have to know wait i think
+func sanankou(hand *types.WinningHand) {
+	ankouCount := getMenzenKoutsuCount(hand.HandParts.Menzen) + len(hand.HandParts.Ankan)
+
+	if ankouCount == 3 {
+		sanankou := types.YakuComponet{Han: 2, Title: "Sanankou"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &sanankou)
+	}
+
+}
+
+func honroutou(hand *types.WinningHand) {
+	var terminalHonors = map[string]bool{
+		"H1": true,
+		"H2": true,
+		"H3": true,
+		"H4": true,
+		"H5": true,
+		"H6": true,
+		"H7": true,
+		"M1": true,
+		"M9": true,
+		"S1": true,
+		"S9": true,
+		"P1": true,
+		"P9": true,
+	}
+	for _, block := range hand.Hand {
+		for _, tile := range block {
+			if !terminalHonors[tile] {
+				return
+			}
+		}
+	}
+	honroutou := types.YakuComponet{Han: 2, Title: "Honroutou"}
+	hand.HandScore.YakuList = append(hand.HandScore.YakuList, &honroutou)
+	hand.HandScore.YakuList = removeYaku(hand.HandScore.YakuList, "Chanta")
+}
+
+func sankantsu(hand *types.WinningHand) {
+	kanCount := len(hand.HandParts.Kan) + len(hand.HandParts.Ankan)
+
+	if kanCount == 3 {
+		sankantsu := types.YakuComponet{Han: 2, Title: "Sankantsu"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &sankantsu)
+	}
+
+}
+
+func honitsu(hand *types.WinningHand) {
+	for i := 1; i < len(hand.Hand); i++ {
+		//it no honor and suits are not equal
+		if hand.Hand[i][0][0] != 'H' && hand.Hand[i-1][0][0] != 'H' && hand.Hand[i][0][0] != hand.Hand[i-1][0][0] {
+			return
+		}
+	}
+
+	honitsu := types.YakuComponet{Han: 3, Title: "Honittsu"}
+	if checkOpenHand(hand) {
+		honitsu.Han = 2
+	}
+	hand.HandScore.YakuList = append(hand.HandScore.YakuList, &honitsu)
 }
