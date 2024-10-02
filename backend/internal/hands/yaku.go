@@ -12,8 +12,8 @@ func getYaku(hand *types.WinningHand) {
 	riichi(hand)
 	menzentsumo(hand)
 	ippatsu(hand)
-	// pinfu(hand)
-	iiryanpeikou(hand) //check both iipeikou and ryanpeikou
+	pinfu(hand)
+	iipeikou(hand)
 	tanyao(hand)
 	yakuhai(hand)
 	haitei(hand)
@@ -30,18 +30,22 @@ func getYaku(hand *types.WinningHand) {
 	chanta(hand)
 	toitoi(hand)
 	shousangen(hand)
-	// sanankou(hand) //NOT DONE
+	sanankou(hand)
 	honroutou(hand)
 	sankantsu(hand)
 
 	//3 han
-	// ryanpeikou(hand)
+	ryanpeikou(hand)
 	honitsu(hand)
-	// junchan(hand)
+	junchan(hand)
 
 	//6 han
-	// chinittsu(hand)
+	chinitsu(hand)
 
+	//dora
+	dora(hand)
+	akaDora(hand)
+	uraDora(hand)
 }
 
 func riichi(hand *types.WinningHand) {
@@ -88,10 +92,48 @@ func ippatsu(hand *types.WinningHand) {
 }
 
 func pinfu(hand *types.WinningHand) {
+	if checkOpenHand(hand) || len(hand.HandParts.Ankan) > 0 {
+		return
+	}
+
+	var ryanmen bool
+	for _, block := range hand.HandParts.Menzen {
+		if len(block) > 2 {
+
+			if checkShuntsuBlock(block) {
+				if hand.HandParts.Agari == block[0] || hand.HandParts.Agari == block[2] {
+					ryanmen = true
+				}
+			} else {
+				return
+			}
+		}
+	}
+
+	if !ryanmen {
+		return
+	}
+
+	var fuTiles = map[string]bool{
+		"H5": true,
+		"H6": true,
+		"H7": true,
+	}
+
+	fuTiles[hand.ScoringParts.Bakaze] = true
+	fuTiles[hand.ScoringParts.Jikaze] = true
+
+	head := getHead(hand.HandParts.Menzen)
+	if fuTiles[head[0]] {
+		return
+	}
+
+	pinfu := types.YakuComponet{Han: 1, Title: "Pinfu"}
+	hand.HandScore.YakuList = append(hand.HandScore.YakuList, &pinfu)
 
 }
 
-func iiryanpeikou(hand *types.WinningHand) {
+func iipeikou(hand *types.WinningHand) {
 	if checkOpenHand(hand) {
 		return
 	}
@@ -119,11 +161,7 @@ func iiryanpeikou(hand *types.WinningHand) {
 	if peikouCount == 1 {
 		iipeikou := types.YakuComponet{Han: 1, Title: "Iipeikou"}
 		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &iipeikou)
-	} else if peikouCount == 2 {
-		ryanpeikou := types.YakuComponet{Han: 3, Title: "Ryanpeikou"}
-		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &ryanpeikou)
 	}
-
 }
 
 func tanyao(hand *types.WinningHand) {
@@ -343,6 +381,9 @@ func chanta(hand *types.WinningHand) {
 }
 
 func toitoi(hand *types.WinningHand) {
+	if len(hand.Hand) != 5 {
+		return
+	}
 	for _, block := range hand.Hand {
 		if len(block) != 2 {
 			if !checkKoutsuBlock(block) {
@@ -384,9 +425,35 @@ func shousangen(hand *types.WinningHand) {
 func sanankou(hand *types.WinningHand) {
 	ankouCount := getMenzenKoutsuCount(hand.HandParts.Menzen) + len(hand.HandParts.Ankan)
 
+	var winTileInKoutsu bool
+	var winTileInShuntsu bool
+	for _, block := range hand.HandParts.Menzen {
+		if checkKoutsuBlock(block) {
+			if block[0][:2] == hand.HandParts.Agari {
+				winTileInKoutsu = true
+			}
+		} else {
+			for _, tile := range block {
+				if tile[:2] == hand.HandParts.Agari {
+					winTileInShuntsu = true
+				}
+			}
+
+		}
+	}
+
+	for _, block := range hand.HandParts.Ankan {
+		if block[0][:2] == hand.HandParts.Agari {
+			winTileInKoutsu = true
+		}
+	}
+
 	if ankouCount == 3 {
-		sanankou := types.YakuComponet{Han: 2, Title: "Sanankou"}
-		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &sanankou)
+		if hand.ScoringParts.Tsumo || !winTileInKoutsu || (winTileInKoutsu && winTileInShuntsu) {
+
+			sanankou := types.YakuComponet{Han: 2, Title: "Sanankou"}
+			hand.HandScore.YakuList = append(hand.HandScore.YakuList, &sanankou)
+		}
 	}
 
 }
@@ -437,9 +504,151 @@ func honitsu(hand *types.WinningHand) {
 		}
 	}
 
-	honitsu := types.YakuComponet{Han: 3, Title: "Honittsu"}
+	honitsu := types.YakuComponet{Han: 3, Title: "Honitsu"}
 	if checkOpenHand(hand) {
 		honitsu.Han = 2
 	}
 	hand.HandScore.YakuList = append(hand.HandScore.YakuList, &honitsu)
+}
+
+func junchan(hand *types.WinningHand) {
+	var terminalHonors = map[string]bool{
+		"M1": true,
+		"M9": true,
+		"S1": true,
+		"S9": true,
+		"P1": true,
+		"P9": true,
+	}
+	for _, block := range hand.Hand {
+		var terminalFound bool
+		for _, tile := range block {
+			if terminalHonors[tile] {
+				terminalFound = true
+			}
+		}
+		if !terminalFound {
+			return
+		}
+	}
+	junchan := types.YakuComponet{Han: 3, Title: "Junchan"}
+
+	if checkOpenHand(hand) {
+		junchan.Han = 2
+	}
+	hand.HandScore.YakuList = append(hand.HandScore.YakuList, &junchan)
+	hand.HandScore.YakuList = removeYaku(hand.HandScore.YakuList, "Chanta")
+
+}
+
+func ryanpeikou(hand *types.WinningHand) {
+	if checkOpenHand(hand) {
+		return
+	}
+
+	shuntsuCount := make(map[string]int)
+
+	for _, block := range hand.HandParts.Menzen {
+		if block[0] != block[1] {
+			shuntsu := ""
+			for _, tile := range block {
+				shuntsu += tile[:2]
+			}
+			shuntsuCount[shuntsu]++
+		}
+	}
+
+	peikouCount := 0
+	for _, amount := range shuntsuCount {
+		if amount >= 2 {
+			peikouCount++
+		}
+
+	}
+
+	if peikouCount == 2 {
+		ryanpeikou := types.YakuComponet{Han: 3, Title: "Ryanpeikou"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &ryanpeikou)
+		hand.HandScore.YakuList = removeYaku(hand.HandScore.YakuList, "Iipeikou")
+	}
+
+}
+func chinitsu(hand *types.WinningHand) {
+	for i := 1; i < len(hand.Hand); i++ {
+		//it no honor and suits are not equal
+		if hand.Hand[i][0][0] == 'H' || hand.Hand[i-1][0][0] == 'H' || hand.Hand[i][0][0] != hand.Hand[i-1][0][0] {
+			return
+		}
+	}
+
+	chinitsu := types.YakuComponet{Han: 6, Title: "Chinitsu"}
+	if checkOpenHand(hand) {
+		chinitsu.Han = 5
+	}
+	hand.HandScore.YakuList = append(hand.HandScore.YakuList, &chinitsu)
+	hand.HandScore.YakuList = removeYaku(hand.HandScore.YakuList, "Honitsu")
+}
+
+func dora(hand *types.WinningHand) {
+	dora := make(map[string]bool)
+	var doraCount int
+	for _, doraTile := range hand.ScoringParts.Dora {
+		dora[doraTile[:2]] = true
+	}
+
+	for _, block := range hand.Hand {
+		for _, tile := range block {
+			if dora[tile[:2]] {
+				doraCount++
+			}
+		}
+	}
+
+	if doraCount > 0 {
+		doraYaku := types.YakuComponet{Han: doraCount, Title: "Dora"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &doraYaku)
+	}
+}
+
+func uraDora(hand *types.WinningHand) {
+	if !hand.ScoringParts.Riichi && !hand.ScoringParts.Wriichi {
+		return
+	}
+
+	dora := make(map[string]bool)
+	var doraCount int
+	for _, doraTile := range hand.ScoringParts.Uradora {
+		dora[doraTile[:2]] = true
+	}
+
+	for _, block := range hand.Hand {
+		for _, tile := range block {
+			if dora[tile[:2]] {
+				doraCount++
+			}
+		}
+	}
+
+	if doraCount > 0 {
+		uradoraYaku := types.YakuComponet{Han: doraCount, Title: "Uradora"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &uradoraYaku)
+	}
+
+}
+
+func akaDora(hand *types.WinningHand) {
+	var doraCount int
+
+	for _, block := range hand.Hand {
+		for _, tile := range block {
+			if len(tile) == 3 && tile[2] == 'A' {
+				doraCount++
+			}
+		}
+	}
+
+	if doraCount > 0 {
+		akadoraYaku := types.YakuComponet{Han: doraCount, Title: "Akadora"}
+		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &akadoraYaku)
+	}
 }

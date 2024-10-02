@@ -28,6 +28,7 @@ type HandPartBlocks struct {
 
 type HandScoringParts struct {
 	Dora    []string `json:"dora"`
+	Uradora []string `json:"uradora"`
 	Oya     bool     `json:"oya"`
 	Bakaze  string   `json:"bakaze"`
 	Jikaze  string   `json:"jikaze"`

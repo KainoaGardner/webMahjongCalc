@@ -34,8 +34,11 @@ func checkValidData(hand *types.PostHandScore) error {
 	if err != nil {
 		return err
 	}
-
 	err = checkMultipleAkaDora(hand)
+	if err != nil {
+		return err
+	}
+	err = checkOpenRiichi(hand)
 	if err != nil {
 		return err
 	}
@@ -94,6 +97,7 @@ func checkEachTileAmount(hand *types.PostHandScore) error {
 	getEachTileAmount(hand.Hand.Kan, count)
 	getEachTileAmount(hand.Hand.Ankan, count)
 	getEachTileAmount(hand.ScoringParts.Dora, count)
+	getEachTileAmount(hand.ScoringParts.Uradora, count)
 
 	for _, total := range count {
 		if total > 4 {
@@ -135,6 +139,10 @@ func checkValidTiles(hand *types.PostHandScore) error {
 		return err
 	}
 	err = checkValidTile(hand.ScoringParts.Dora)
+	if err != nil {
+		return err
+	}
+	err = checkValidTile(hand.ScoringParts.Uradora)
 	if err != nil {
 		return err
 	}
@@ -192,5 +200,19 @@ func checkMultipleAkaDora(hand *types.PostHandScore) error {
 		}
 
 	}
+	return nil
+}
+
+func checkOpenRiichi(hand *types.PostHandScore) error {
+	var open bool
+
+	if len(hand.Hand.Chi) > 0 || len(hand.Hand.Pon) > 0 || len(hand.Hand.Kan) > 0 {
+		open = true
+	}
+
+	if (open && hand.ScoringParts.Riichi) || (open && hand.ScoringParts.Wriichi) {
+		return fmt.Errorf("Cannot call riichi with an open hand")
+	}
+
 	return nil
 }
