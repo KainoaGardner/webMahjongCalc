@@ -22,7 +22,7 @@ func checkValidData(hand *types.PostHandScore) error {
 	if err != nil {
 		return err
 	}
-	err = checkCallTileMultiples(hand.Hand)
+	err = CheckCallTileMultiples(hand.Hand)
 	if err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func checkMinMenzenTiles(hand *types.HandParts) error {
 	return nil
 }
 
-func checkCallTileMultiples(hand *types.HandParts) error {
+func CheckCallTileMultiples(hand *types.HandParts) error {
 	if len(hand.Chi)%3 != 0 || len(hand.Pon)%3 != 0 {
 		return fmt.Errorf("Calls Chi and Pon must be multiple of 3")
 	}

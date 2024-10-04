@@ -3,18 +3,19 @@ package hands
 import (
 	"fmt"
 	"github.com/KainoaGardner/webMahjongCalc/types"
+	"github.com/KainoaGardner/webMahjongCalc/utils"
 	"maps"
 	"strings"
 )
 
-func getValidHands(hand *types.HandParts) ([]types.WinningHand, error) {
+func GetValidHands(hand *types.HandParts) ([]types.WinningHand, error) {
 	//first menzen
 	totalTileCount := make(map[string]int)
 	var potentialHands [][][]string
 
 	//mentsu
-	tileCount := getTileMap(hand.Menzen)
-	addToTileMap(totalTileCount, hand.Menzen)
+	tileCount := utils.GetTileMap(hand.Menzen)
+	utils.AddToTileMap(totalTileCount, hand.Menzen)
 
 	//check kokushi
 	kokushiHand, ok := checkKokushimusou(tileCount)
@@ -32,20 +33,20 @@ func getValidHands(hand *types.HandParts) ([]types.WinningHand, error) {
 	mentsu := getMentsu(tileCount)
 
 	//calls
-	tileCount = getTileMap(hand.Chi)
-	addToTileMap(totalTileCount, hand.Chi)
+	tileCount = utils.GetTileMap(hand.Chi)
+	utils.AddToTileMap(totalTileCount, hand.Chi)
 	mentsu = appendChiMentsu(tileCount, mentsu)
 
-	tileCount = getTileMap(hand.Pon)
-	addToTileMap(totalTileCount, hand.Pon)
+	tileCount = utils.GetTileMap(hand.Pon)
+	utils.AddToTileMap(totalTileCount, hand.Pon)
 	mentsu = appendPonMentsu(tileCount, mentsu)
 
-	tileCount = getTileMap(hand.Kan)
-	addToTileMap(totalTileCount, hand.Kan)
+	tileCount = utils.GetTileMap(hand.Kan)
+	utils.AddToTileMap(totalTileCount, hand.Kan)
 	mentsu = appendKanMentsu(tileCount, mentsu)
 
-	tileCount = getTileMap(hand.Ankan)
-	addToTileMap(totalTileCount, hand.Ankan)
+	tileCount = utils.GetTileMap(hand.Ankan)
+	utils.AddToTileMap(totalTileCount, hand.Ankan)
 	mentsu = appendKanMentsu(tileCount, mentsu)
 
 	//check valid hands
@@ -339,15 +340,15 @@ func formatHands(validHands [][][]string, hand *types.HandParts) ([]types.Winnin
 		}
 		formattedHand.HandParts.Agari = hand.Menzen[len(hand.Menzen)-1]
 
-		menTileCount := getTileMap(hand.Menzen)
+		menTileCount := utils.GetTileMap(hand.Menzen)
 		var menzen [][]string
-		chiTileCount := getTileMap(hand.Chi)
+		chiTileCount := utils.GetTileMap(hand.Chi)
 		var chi [][]string
-		ponTileCount := getTileMap(hand.Pon)
+		ponTileCount := utils.GetTileMap(hand.Pon)
 		var pon [][]string
-		kanTileCount := getTileMap(hand.Kan)
+		kanTileCount := utils.GetTileMap(hand.Kan)
 		var kan [][]string
-		ankanTileCount := getTileMap(hand.Ankan)
+		ankanTileCount := utils.GetTileMap(hand.Ankan)
 		var ankan [][]string
 
 		tileCounts := []map[string]int{menTileCount, chiTileCount, ponTileCount, kanTileCount, ankanTileCount}
@@ -373,7 +374,7 @@ func formatHands(validHands [][][]string, hand *types.HandParts) ([]types.Winnin
 }
 
 func addBlockToParts(block []string, tileCounts []map[string]int, handParts [][][]string) [][][]string {
-	blockTileCount := getTileMap(block)
+	blockTileCount := utils.GetTileMap(block)
 
 	for i := 0; i < len(handParts); i++ {
 		if checkAddBlockToPart(blockTileCount, tileCounts[i]) {
