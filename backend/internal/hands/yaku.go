@@ -46,6 +46,16 @@ func getYaku(hand *types.WinningHand) {
 	dora(hand)
 	akaDora(hand)
 	uraDora(hand)
+
+	hand.HandScore.Han = getTotalHan(hand)
+}
+
+func getTotalHan(hand *types.WinningHand) int {
+	var totalHan int
+	for _, han := range hand.HandScore.YakuList {
+		totalHan += han.Han
+	}
+	return totalHan
 }
 
 func riichi(hand *types.WinningHand) {
@@ -123,7 +133,11 @@ func pinfu(hand *types.WinningHand) {
 	fuTiles[hand.ScoringParts.Bakaze] = true
 	fuTiles[hand.ScoringParts.Jikaze] = true
 
-	head := getHead(hand.HandParts.Menzen)
+	head, ok := getHead(hand.HandParts.Menzen)
+	if !ok {
+		return
+	}
+
 	if fuTiles[head[0]] {
 		return
 	}
@@ -421,7 +435,6 @@ func shousangen(hand *types.WinningHand) {
 	}
 }
 
-// not done HARD have to know wait i think
 func sanankou(hand *types.WinningHand) {
 	ankouCount := getMenzenKoutsuCount(hand.HandParts.Menzen) + len(hand.HandParts.Ankan)
 
@@ -429,12 +442,12 @@ func sanankou(hand *types.WinningHand) {
 	var winTileInShuntsu bool
 	for _, block := range hand.HandParts.Menzen {
 		if checkKoutsuBlock(block) {
-			if block[0][:2] == hand.HandParts.Agari {
+			if block[0][:2] == hand.HandParts.Agari[:2] {
 				winTileInKoutsu = true
 			}
 		} else {
 			for _, tile := range block {
-				if tile[:2] == hand.HandParts.Agari {
+				if tile == hand.HandParts.Agari {
 					winTileInShuntsu = true
 				}
 			}
@@ -443,7 +456,7 @@ func sanankou(hand *types.WinningHand) {
 	}
 
 	for _, block := range hand.HandParts.Ankan {
-		if block[0][:2] == hand.HandParts.Agari {
+		if block[0][:2] == hand.HandParts.Agari[:2] {
 			winTileInKoutsu = true
 		}
 	}

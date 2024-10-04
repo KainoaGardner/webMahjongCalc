@@ -33,3 +33,10 @@ func CeilHundred(x int) int {
 	}
 	return x
 }
+
+func CeilTen(x int) int {
+	if x%10 != 0 {
+		return x + 10 - (x % 10)
+	}
+	return x
+}

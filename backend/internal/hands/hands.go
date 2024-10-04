@@ -27,10 +27,9 @@ func GetHandScore(hand *types.PostHandScore) (*types.ReturnHandScore, error) {
 		return nil, err
 	}
 
-	fmt.Println("last", winningHand)
-	// scoreResult.Hand = winningHand
-	// scoreResult.HandScore = handScore
-	//
+	scoreResult.Hand = winningHand.HandParts
+	scoreResult.HandScore = winningHand.HandScore
+
 	return &scoreResult, nil
 
 }

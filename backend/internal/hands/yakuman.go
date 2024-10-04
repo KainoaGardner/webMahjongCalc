@@ -17,6 +17,15 @@ func getYakuman(hand *types.WinningHand) {
 	ryuuiisou(hand)
 	suukantsu(hand)
 
+	hand.HandScore.Yakuman = getTotalYakuman(hand)
+
+}
+func getTotalYakuman(hand *types.WinningHand) int {
+	var totalYakuman int
+	for _, yakuman := range hand.HandScore.YakumanList {
+		totalYakuman += yakuman.Yakuman
+	}
+	return totalYakuman
 }
 
 func tenhou(hand *types.WinningHand) {
@@ -45,7 +54,10 @@ func suuankou(hand *types.WinningHand) {
 	koutsuCount := getMenzenKoutsuCount(hand.HandParts.Menzen) + len(hand.HandParts.Ankan)
 	if koutsuCount >= 4 {
 
-		head := getHead(hand.HandParts.Menzen)
+		head, ok := getHead(hand.HandParts.Menzen)
+		if !ok {
+			return
+		}
 
 		//if tanki pattern
 		if head != nil && hand.HandParts.Agari[:2] == head[0][:2] {
@@ -101,7 +113,10 @@ func checkKokushiAllTiles(handCount map[string]int) bool {
 	return false
 }
 func checkKokushiThirteenWait(handParts *types.HandPartBlocks) bool {
-	head := getHead(handParts.Menzen)
+	head, ok := getHead(handParts.Menzen)
+	if !ok {
+		return false
+	}
 	if head != nil && handParts.Agari[:2] == head[0][:2] {
 		return true
 	}

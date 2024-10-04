@@ -27,24 +27,25 @@ type HandPartBlocks struct {
 }
 
 type HandScoringParts struct {
-	Dora    []string `json:"dora"`
-	Uradora []string `json:"uradora"`
-	Oya     bool     `json:"oya"`
-	Bakaze  string   `json:"bakaze"`
-	Jikaze  string   `json:"jikaze"`
-	Ron     bool     `json:"ron"`
-	Tsumo   bool     `json:"tsumo"`
-	Riichi  bool     `json:"riichi"`
-	Wriichi bool     `json:"wriichi"`
-	Ippatsu bool     `json:"ippatsu"`
-	Chankan bool     `json:"chankan"`
-	Rinshan bool     `json:"rinshan"`
-	Haitei  bool     `json:"haitei"`
-	Houtei  bool     `json:"houtei"`
-	Tenhou  bool     `json:"tenhou"`
-	Chiihou bool     `json:"chiihou"`
-	Honba   int      `json:"honba"`
-	Kiriage bool     `json:"kiriage"`
+	Dora      []string `json:"dora"`
+	Uradora   []string `json:"uradora"`
+	Oya       bool     `json:"oya"`
+	Bakaze    string   `json:"bakaze"`
+	Jikaze    string   `json:"jikaze"`
+	Ron       bool     `json:"ron"`
+	Tsumo     bool     `json:"tsumo"`
+	Riichi    bool     `json:"riichi"`
+	Wriichi   bool     `json:"wriichi"`
+	Ippatsu   bool     `json:"ippatsu"`
+	Chankan   bool     `json:"chankan"`
+	Rinshan   bool     `json:"rinshan"`
+	Haitei    bool     `json:"haitei"`
+	Houtei    bool     `json:"houtei"`
+	Tenhou    bool     `json:"tenhou"`
+	Chiihou   bool     `json:"chiihou"`
+	Honba     int      `json:"honba"`
+	RiichiBou int      `json:"riichiBou"`
+	Kiriage   bool     `json:"kiriage"`
 }
 
 // point return

@@ -34,13 +34,13 @@ func getUnsortedHand(hand *types.WinningHand) []string {
 	return unsortedHand
 }
 
-func getHead(menzen [][]string) []string {
+func getHead(menzen [][]string) ([]string, bool) {
 	for _, block := range menzen {
 		if len(block) == 2 {
-			return block
+			return block, true
 		}
 	}
-	return nil
+	return nil, false
 }
 
 func getMenzenKoutsuCount(menzen [][]string) int {
@@ -103,5 +103,16 @@ func removeYaku(hand []*types.YakuComponet, yaku string) []*types.YakuComponet {
 
 	}
 	return hand
+
+}
+
+func checkYaku(hand []*types.YakuComponet, yakuTitle string) bool {
+	for _, yaku := range hand {
+		if yaku.Title == yakuTitle {
+			return true
+		}
+
+	}
+	return false
 
 }
