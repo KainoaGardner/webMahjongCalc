@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import "./Hand.css";
 
 function AddTiles() {
@@ -8,12 +9,32 @@ function AddTiles() {
   function addTile(tile) {
     //add to tilecount
     if (hand.length < 14) {
-      setTileCount(new Map(tileCount).set(tile, 1));
+      const tiles = tileCount.get(tile);
+      let akaTiles = tileCount.get(tile.concat("A"));
+      if (!akaTiles) {
+        akaTiles = 0;
+      }
+
+      if (tiles + akaTiles >= 4 || (tile.length === 3 && tiles >= 1)) {
+        return;
+      }
+
+      if (tile.length === 3 && tileCount.get(tile.slice(0, 2)) >= 4) {
+        return;
+      }
+
+      let tileAmount = 1;
+      if (tiles) {
+        tileAmount = tiles + 1;
+      }
+
+      setTileCount(new Map(tileCount).set(tile, tileAmount));
       setHand((h) => [...h, tile]);
     }
   }
 
-  function removeTile(index) {
+  function removeTile(tile, index) {
+    setTileCount(new Map(tileCount).set(tile, tileCount.get(tile) - 1));
     setHand(hand.filter((_, i) => i !== index));
   }
 
@@ -32,7 +53,7 @@ function AddTiles() {
               key={index}
               src={`tiles/${tile}.png`}
               draggable="false"
-              onClick={() => removeTile(index)}
+              onClick={() => removeTile(tile, index)}
             />
           ))}
         </div>

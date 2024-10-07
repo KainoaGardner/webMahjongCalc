@@ -252,7 +252,7 @@ func houtei(hand *types.WinningHand) {
 }
 
 func rinshan(hand *types.WinningHand) {
-	if len(hand.HandParts.Kan)+len(hand.HandParts.Ankan) == 0 {
+	if len(hand.HandParts.Kan)+len(hand.HandParts.Ankan) == 0 || !hand.ScoringParts.Tsumo {
 		return
 	}
 
@@ -264,7 +264,7 @@ func rinshan(hand *types.WinningHand) {
 }
 
 func chankan(hand *types.WinningHand) {
-	if hand.ScoringParts.Ron && hand.ScoringParts.Chankan {
+	if hand.ScoringParts.Ron && hand.ScoringParts.Chankan || !hand.ScoringParts.Ron {
 		chankan := types.YakuComponet{Han: 1, Title: "Chankan"}
 		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &chankan)
 	}

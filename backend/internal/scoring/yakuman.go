@@ -30,7 +30,7 @@ func getTotalYakuman(hand *types.WinningHand) int {
 }
 
 func tenhou(hand *types.WinningHand) {
-	if utils.CheckOpenHand(hand) {
+	if utils.CheckOpenHand(hand) || !hand.ScoringParts.Oya {
 		return
 	}
 	if hand.ScoringParts.Tenhou {
@@ -41,7 +41,7 @@ func tenhou(hand *types.WinningHand) {
 }
 
 func chiihou(hand *types.WinningHand) {
-	if utils.CheckOpenHand(hand) {
+	if utils.CheckOpenHand(hand) || hand.ScoringParts.Oya {
 		return
 	}
 	if hand.ScoringParts.Tenhou {

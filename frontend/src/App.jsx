@@ -1,12 +1,14 @@
 import "./App.css";
 import AddTiles from "./AddTiles.jsx";
-import Hand from "./Hand.jsx";
+import ScoringOptions from "./ScoringOptions.jsx";
+import Dora from "./Dora.jsx";
 
 function App() {
   return (
     <>
-      <Hand />
       <AddTiles />
+      <Dora />
+      <ScoringOptions />
     </>
   );
 }
