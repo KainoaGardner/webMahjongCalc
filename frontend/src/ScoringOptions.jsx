@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./ScoringOptions.css";
 
-function ScoringOptions() {
+function ScoringOptions({ hand, chi, pon, kan, ankan, tileCount }) {
   const [oya, setOya] = useState(true); //true oya false ko
   const [agari, setAgari] = useState(true); //true ron false tsumo
   const [riichi, setRiichi] = useState("None"); //None riichi wriichi
@@ -17,10 +17,10 @@ function ScoringOptions() {
   const [jikaze, setJikaze] = useState("H1"); //H1 ton H2 nan H3 sha H4 pei
 
   function changeRiichi() {
-    // if (riichi === "Dama" && OPENHAND) {
-    //   alert("Cannot call riichi with an open hand");
-    //   return;
-    // }
+    if (chi.length + pon.length + kan.length > 0) {
+      setRiichi("None");
+      return;
+    }
     switch (riichi) {
       case "None":
         setRiichi("Riichi");
@@ -36,7 +36,7 @@ function ScoringOptions() {
 
   function changeIppatsu() {
     if (riichi === "None") {
-      alert("Must have riichi or wriichi for ippatsu");
+      setIppatsu(false);
       return;
     }
     setIppatsu(!ippatsu);
@@ -44,7 +44,7 @@ function ScoringOptions() {
 
   function changeChankan() {
     if (!agari) {
-      alert("Must win by ron for chankan");
+      setChankan(false);
       return;
     }
     setChankan(!chankan);
@@ -52,13 +52,13 @@ function ScoringOptions() {
 
   function changeRinshan() {
     if (agari) {
-      alert("Must win by tsmuo for rinshan");
+      setRinshan(false);
       return;
     }
-    // if (!rinshan && !KAN) {
-    //   alert("Must have at least 1 kan for rinshan");
-    //   return;
-    // }
+    if (!rinshan && kan.length + ankan.length == 0) {
+      setRinshan(false);
+      return;
+    }
 
     setRinshan(!rinshan);
   }
@@ -74,8 +74,7 @@ function ScoringOptions() {
   }
 
   function changeTenhou() {
-    if (agari) {
-      alert("Cant win Tenhou or chiihou with ron");
+    if (agari || chi.length + pon.length + kan.length + ankan.length > 0) {
       return;
     }
     if (tenhou === "None" && oya) {
@@ -89,7 +88,6 @@ function ScoringOptions() {
 
   function decreaseHonba() {
     if (honba === 0) {
-      alert("Cant have negative honba");
       return;
     }
     setHonba(honba - 1);
@@ -97,7 +95,6 @@ function ScoringOptions() {
 
   function decreaseRiichibou() {
     if (riichibou === 0) {
-      alert("Cant have negative riichibou");
       return;
     }
     setRiichibou(riichibou - 1);
@@ -137,6 +134,47 @@ function ScoringOptions() {
     }
   }
 
+  function checkValidRiichi() {
+    if (chi.length + pon.length + kan.length > 0) {
+      return riichi === "None" ? "off notValid" : "notValid";
+    }
+    return riichi === "None" ? "off" : "";
+  }
+
+  function checkValidIppatsu() {
+    if (riichi === "None") {
+      return ippatsu ? "notValid" : "off notValid";
+    }
+    return ippatsu ? "" : "off";
+  }
+
+  function checkValidChankan() {
+    if (!agari) {
+      return chankan ? "notValid" : "off notValid";
+    }
+    return chankan ? "" : "off";
+  }
+
+  function checkValidRinshan() {
+    if (kan.length + ankan.length === 0 || agari) {
+      return rinshan ? "notValid" : "off notValid";
+    }
+
+    return rinshan ? "" : "off";
+  }
+
+  function checkValidTenhou() {
+    if (agari || chi.length + pon.length + kan.length + ankan.length > 0) {
+      return tenhou === "None" ? "off notValid" : "notValid";
+    }
+
+    return tenhou === "None" ? "off" : "";
+  }
+
+  useEffect(() => {
+    setRiichi("None");
+  }, [chi, pon, kan]);
+
   useEffect(() => {
     setHaitei("None");
     setTenhou("None");
@@ -161,28 +199,16 @@ function ScoringOptions() {
         <button onClick={() => setAgari(!agari)}>
           {agari ? "Ron" : "Tsumo"}
         </button>
-        <button
-          onClick={() => changeRiichi()}
-          className={riichi === "None" ? "off" : ""}
-        >
+        <button onClick={() => changeRiichi()} className={checkValidRiichi()}>
           {riichi === "None" ? "Riichi" : riichi}
         </button>
-        <button
-          onClick={() => changeIppatsu()}
-          className={ippatsu ? "" : "off"}
-        >
+        <button onClick={() => changeIppatsu()} className={checkValidIppatsu()}>
           Ippatsu
         </button>
-        <button
-          onClick={() => changeChankan()}
-          className={chankan ? "" : "off"}
-        >
+        <button onClick={() => changeChankan()} className={checkValidChankan()}>
           Chankan
         </button>
-        <button
-          onClick={() => changeRinshan()}
-          className={rinshan ? "" : "off"}
-        >
+        <button onClick={() => changeRinshan()} className={checkValidRinshan()}>
           Rinshan
         </button>
         <button
@@ -199,10 +225,7 @@ function ScoringOptions() {
             }
           })()}
         </button>
-        <button
-          onClick={() => changeTenhou()}
-          className={tenhou === "None" ? "off" : ""}
-        >
+        <button onClick={() => changeTenhou()} className={checkValidTenhou()}>
           {(() => {
             if (tenhou === "None" && oya) {
               return "Tenhou";
@@ -223,14 +246,24 @@ function ScoringOptions() {
         <div>
           <div>
             <h2>Honba</h2>
-            <button onClick={() => decreaseHonba()}>-</button>
+            <button
+              onClick={() => decreaseHonba()}
+              className={honba === 0 ? "notValid" : ""}
+            >
+              -
+            </button>
             {honba}
             <button onClick={() => setHonba(honba + 1)}>+</button>
           </div>
 
           <div>
             <h2>Riichibou</h2>
-            <button onClick={() => decreaseRiichibou()}>-</button>
+            <button
+              onClick={() => decreaseRiichibou()}
+              className={riichibou === 0 ? "notValid" : ""}
+            >
+              -
+            </button>
             {riichibou}
             <button onClick={() => setRiichibou(riichibou + 1)}>+</button>
           </div>

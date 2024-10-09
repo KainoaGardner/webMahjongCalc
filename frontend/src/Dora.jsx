@@ -1,38 +1,63 @@
-import { useState } from "react";
+import "./Hand.css";
 
-function Dora() {
-  const [dora, setDora] = useState(["M1", "B0", "B0", "B0"]);
-  const [uradora, setUradora] = useState(["B0", "B0", "B0", "B0"]);
-
-  function removeDoraTile(tile, index) {
+function Dora({
+  tileCount,
+  setTileCount,
+  dora,
+  setDora,
+  uradora,
+  setUradora,
+  doraIndex,
+  setDoraIndex,
+  uradoraIndex,
+  setUradoraIndex,
+}) {
+  function changeDora(tile, index) {
     if (tile !== "B0") {
       dora[index] = "B0";
       setDora((d) => [...d]);
+      setTileCount(new Map(tileCount).set(tile, tileCount.get(tile) - 1));
+    } else {
+      setDoraIndex(index);
+      setUradoraIndex(-1);
+    }
+  }
+
+  function changeUradora(tile, index) {
+    if (tile !== "B0") {
+      uradora[index] = "B0";
+      setUradora((d) => [...d]);
+      setTileCount(new Map(tileCount).set(tile, tileCount.get(tile) - 1));
+    } else {
+      setUradoraIndex(index);
+      setDoraIndex(-1);
     }
   }
 
   return (
     <>
       <div>
+        <h2>Dora</h2>
         {dora.map((tile, index) => (
           <img
-            className="tile"
+            className={doraIndex === index ? "selected tile" : "tile"}
             key={index}
             src={`tiles/${tile}.png`}
             draggable="false"
-            onClick={() => removeDoraTile(tile, index)}
+            onClick={() => changeDora(tile, index)}
           />
         ))}
       </div>
 
       <div>
+        <h2>Uradora</h2>
         {uradora.map((tile, index) => (
           <img
-            className="tile"
+            className={uradoraIndex === index ? "selected tile" : "tile"}
             key={index}
             src={`tiles/${tile}.png`}
             draggable="false"
-            onClick={() => removeDoraTile(tile, index)}
+            onClick={() => changeUradora(tile, index)}
           />
         ))}
       </div>

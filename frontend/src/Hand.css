@@ -1,3 +1,15 @@
 .all {
   white-space: nowrap;
 }
+
+.selected {
+  border: solid;
+  border-radius: 10px;
+}
+
+.empty {
+  outline: 33px solid rgba(0, 0, 0, 0.5);
+  outline-offset: -33px;
+  overflow: hidden;
+  position: relative;
+}
