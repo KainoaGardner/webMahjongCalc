@@ -16,7 +16,6 @@ function AddTiles({
   callType,
   setCallType,
   akaCall,
-  // setAkaCall,
   tileCount,
   setTileCount,
   dora,
@@ -34,8 +33,8 @@ function AddTiles({
       hand.length +
       chi.length +
       pon.length +
-      (kan.length - kan.length / 3) +
-      (ankan.length - ankan.length / 3);
+      (kan.length - parseInt(kan.length / 4)) +
+      (ankan.length - parseInt(ankan.length / 4));
 
     if (totalTiles < 14) {
       const tiles = tileCount.get(tile);
@@ -49,7 +48,6 @@ function AddTiles({
         (tile.length === 3 && tiles >= 1) ||
         (tile.length === 3 && tileCount.get(tile.slice(0, 2)) >= 4)
       ) {
-        setCallType("");
         setDoraIndex(-1);
         setUradoraIndex(-1);
         return;
@@ -71,19 +69,13 @@ function AddTiles({
         setUradora((u) => [...u]);
         setUradoraIndex(-1);
       } else if (callType == "chi") {
-        setCallType("");
         addChi(tile, totalTiles);
       } else if (callType == "pon") {
-        setCallType("");
         addPon(tile, totalTiles);
       } else if (callType == "kan") {
         addKan(tile, totalTiles);
-
-        setCallType("");
       } else if (callType == "ankan") {
         addAnkan(tile, totalTiles);
-
-        setCallType("");
       } else {
         setTileCount(new Map(tileCount).set(tile, tileAmount));
         setHand((h) => [...h, tile]);
@@ -98,12 +90,10 @@ function AddTiles({
       tile[0] === "H" ||
       tile.length === 3
     ) {
-      setCallType("");
       return;
     }
 
     if (akaCall && tile[1] !== "3" && tile[1] !== "4" && tile[1] !== "5") {
-      setCallType("");
       return;
     }
 
@@ -152,7 +142,6 @@ function AddTiles({
 
   function addPon(tile, totalTiles) {
     if (totalTiles > 11 || (akaCall && tile[1] !== "5") || tile.length === 3) {
-      setCallType("");
       return;
     }
 
@@ -167,7 +156,6 @@ function AddTiles({
     }
 
     if (tiles + akaTiles > 1) {
-      setCallType("");
       return;
     }
     pon.push(tile);
@@ -188,7 +176,6 @@ function AddTiles({
 
   function addKan(tile, totalTiles) {
     if (totalTiles > 11 || (akaCall && tile[1] !== "5") || tile.length === 3) {
-      setCallType("");
       return;
     }
 
@@ -203,7 +190,6 @@ function AddTiles({
     }
 
     if (tiles + akaTiles > 0) {
-      setCallType("");
       return;
     }
 
@@ -226,7 +212,6 @@ function AddTiles({
 
   function addAnkan(tile, totalTiles) {
     if (totalTiles > 11 || (akaCall && tile[1] !== "5") || tile.length === 3) {
-      setCallType("");
       return;
     }
 
@@ -241,7 +226,6 @@ function AddTiles({
     }
 
     if (tiles + akaTiles > 0) {
-      setCallType("");
       return;
     }
 

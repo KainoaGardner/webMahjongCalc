@@ -1,21 +1,38 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import "./ScoringOptions.css";
 
-function ScoringOptions({ hand, chi, pon, kan, ankan, tileCount }) {
-  const [oya, setOya] = useState(true); //true oya false ko
-  const [agari, setAgari] = useState(true); //true ron false tsumo
-  const [riichi, setRiichi] = useState("None"); //None riichi wriichi
-  const [ippatsu, setIppatsu] = useState(false); //true ippatsu false none
-  const [chankan, setChankan] = useState(false); //true chankan false none
-  const [rinshan, setRinshan] = useState(false); //true rinshan false none
-  const [haitei, setHaitei] = useState("None"); //None haitei houtei
-  const [tenhou, setTenhou] = useState("None"); //None tenhou chiihou
-  const [honba, setHonba] = useState(0); //0 >
-  const [riichibou, setRiichibou] = useState(0); //0 >
-  const [kiriage, setKiriage] = useState(false); //true kiriage false none
-  const [bakaze, setBakaze] = useState("H1"); //H1 ton H2 nan H3 sha H4 pei
-  const [jikaze, setJikaze] = useState("H1"); //H1 ton H2 nan H3 sha H4 pei
-
+function ScoringOptions({
+  chi,
+  pon,
+  kan,
+  ankan,
+  oya,
+  setOya,
+  agari,
+  setAgari,
+  riichi,
+  setRiichi,
+  ippatsu,
+  setIppatsu,
+  chankan,
+  setChankan,
+  rinshan,
+  setRinshan,
+  haitei,
+  setHaitei,
+  tenhou,
+  setTenhou,
+  honba,
+  setHonba,
+  riichibou,
+  setRiichibou,
+  kiriage,
+  setKiriage,
+  bakaze,
+  setBakaze,
+  jikaze,
+  setJikaze,
+}) {
   function changeRiichi() {
     if (chi.length + pon.length + kan.length > 0) {
       setRiichi("None");

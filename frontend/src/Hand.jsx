@@ -3,6 +3,8 @@ import { useState } from "react";
 import AddTiles from "./AddTiles.jsx";
 import Dora from "./Dora.jsx";
 import ScoringOptions from "./ScoringOptions.jsx";
+import Results from "./Results.jsx";
+import Tenpai from "./Tenpai.jsx";
 
 import "./Hand.css";
 
@@ -21,6 +23,20 @@ function Hand() {
   const [uradora, setUradora] = useState(["B0", "B0", "B0", "B0"]);
   const [doraIndex, setDoraIndex] = useState(-1);
   const [uradoraIndex, setUradoraIndex] = useState(-1);
+
+  const [oya, setOya] = useState(true); //true oya false ko
+  const [agari, setAgari] = useState(true); //true ron false tsumo
+  const [riichi, setRiichi] = useState("None"); //None riichi wriichi
+  const [ippatsu, setIppatsu] = useState(false); //true ippatsu false none
+  const [chankan, setChankan] = useState(false); //true chankan false none
+  const [rinshan, setRinshan] = useState(false); //true rinshan false none
+  const [haitei, setHaitei] = useState("None"); //None haitei houtei
+  const [tenhou, setTenhou] = useState("None"); //None tenhou chiihou
+  const [honba, setHonba] = useState(0); //0 >
+  const [riichibou, setRiichibou] = useState(0); //0 >
+  const [kiriage, setKiriage] = useState(false); //true kiriage false none
+  const [bakaze, setBakaze] = useState("H1"); //H1 ton H2 nan H3 sha H4 pei
+  const [jikaze, setJikaze] = useState("H1"); //H1 ton H2 nan H3 sha H4 pei
 
   function changeCallType(type) {
     if (callType === type) {
@@ -198,6 +214,44 @@ function Hand() {
 
   return (
     <>
+      {hand.length +
+        chi.length +
+        pon.length +
+        (kan.length - parseInt(kan.length / 4)) +
+        (ankan.length - parseInt(ankan.length / 4)) ===
+        14 && (
+        <Results
+          hand={hand}
+          chi={chi}
+          pon={pon}
+          kan={kan}
+          ankan={ankan}
+          oya={oya}
+          agari={agari}
+          riichi={riichi}
+          ippatsu={ippatsu}
+          chankan={chankan}
+          rinshan={rinshan}
+          haitei={haitei}
+          tenhou={tenhou}
+          honba={honba}
+          riichibou={riichibou}
+          kiriage={kiriage}
+          bakaze={bakaze}
+          jikaze={jikaze}
+          dora={dora}
+          uradora={uradora}
+        />
+      )}
+
+      {hand.length +
+        chi.length +
+        pon.length +
+        (kan.length - parseInt(kan.length / 4)) +
+        (ankan.length - parseInt(ankan.length / 4)) ===
+        13 && (
+        <Tenpai hand={hand} chi={chi} pon={pon} kan={kan} ankan={ankan} />
+      )}
       <div>
         <div>
           {hand.map((tile, index) => (
@@ -308,7 +362,6 @@ function Hand() {
         callType={callType}
         setCallType={(string) => setCallType(string)}
         akaCall={akaCall}
-        setAkaCall={setAkaCall}
         tileCount={tileCount}
         setTileCount={(map) => setTileCount(map)}
         dora={dora}
@@ -339,12 +392,36 @@ function Hand() {
       </div>
 
       <ScoringOptions
-        hand={hand}
         chi={chi}
         pon={pon}
         kan={kan}
         ankan={ankan}
-        tileCount={tileCount}
+        oya={oya}
+        setOya={setOya}
+        agari={agari}
+        setAgari={setAgari}
+        riichi={riichi}
+        setRiichi={setRiichi}
+        ippatsu={ippatsu}
+        setIppatsu={setIppatsu}
+        chankan={chankan}
+        setChankan={setChankan}
+        rinshan={rinshan}
+        setRinshan={setRinshan}
+        haitei={haitei}
+        setHaitei={setHaitei}
+        tenhou={tenhou}
+        setTenhou={setTenhou}
+        honba={honba}
+        setHonba={setHonba}
+        riichibou={riichibou}
+        setRiichibou={setRiichibou}
+        kiriage={kiriage}
+        setKiriage={setKiriage}
+        bakaze={bakaze}
+        setBakaze={setBakaze}
+        jikaze={jikaze}
+        setJikaze={setJikaze}
       />
     </>
   );
