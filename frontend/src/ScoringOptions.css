@@ -1,3 +1,6 @@
+button {
+  margin: 2px;
+}
 .off {
   background-color: #000000;
 }
@@ -5,4 +8,19 @@
 .notValid {
   background-color: rgba(0, 0, 0, 0.5);
   color: rgba(100, 100, 100, 0.5);
+}
+
+.scoringOptions {
+  display: flex;
+  flex-direction: column;
+}
+
+.kaze {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 10px;
+}
+
+.kazeTitle {
+  margin: 5px 0px;
 }

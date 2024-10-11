@@ -1,4 +1,5 @@
 import "./Hand.css";
+import "./Results.css";
 import { useState, useEffect } from "react";
 
 function Results({
@@ -48,12 +49,26 @@ function Results({
     import.meta.env.VITE_API_VER +
     "/";
 
+  function getFixedAnkan() {
+    const newAnkan = [];
+    for (let i = 0; i < ankan.length; i++) {
+      if (i % 4 == 0) {
+        newAnkan[i] = ankan[i + 1];
+      } else if (i % 4 === 3) {
+        newAnkan[i] = ankan[i - 2];
+      } else {
+        newAnkan[i] = ankan[i];
+      }
+    }
+    return newAnkan;
+  }
+
   const handParts = {
     Menzen: hand,
     Chi: chi,
     Pon: pon,
     Kan: kan,
-    Ankan: ankan,
+    Ankan: getFixedAnkan(),
   };
 
   const scoringParts = {
@@ -144,127 +159,179 @@ function Results({
 
   useEffect(() => {
     scorePost();
-  }, []);
+  }, [
+    agari,
+    oya,
+    riichi,
+    ippatsu,
+    chankan,
+    rinshan,
+    haitei,
+    tenhou,
+    honba,
+    riichibou,
+    kiriage,
+    bakaze,
+    jikaze,
+    dora,
+    uradora,
+  ]);
 
   return (
     <>
       <div>
-        <h2>Score</h2>
-        <p>{score !== 0 ? score : ""}</p>
-        <p>{scoreType}</p>
+        <h2 className="point">{scoreType}</h2>
+        <h2 className="point">{score !== 0 ? score : ""} </h2>
+        <hr />
 
-        {!agari ? (
+        <div className="payment">
           <div>
-            {!oya ? <p>Oya Payment : {oyaPayment}</p> : <></>}
-            <p>Ko Payment : {koPayment}</p>
+            {!agari ? (
+              <div className="scoreCompMain">
+                <hr />
+                {!oya ? (
+                  <p className="scoreComp">Oya Payment : {oyaPayment}</p>
+                ) : (
+                  <></>
+                )}
+                <p className="scoreComp">Ko Payment : {koPayment}</p>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
-        ) : (
-          <></>
-        )}
+        </div>
+      </div>
 
-        {han ? (
-          <div>
-            <h3>Yaku</h3>
-            {han}
+      <div className="resultMain">
+        <div className={han ? "scoreBlock" : ""}>
+          {han ? (
             <div>
-              {yakuList.map((yakuComp, index) => (
-                <p key={index}>
-                  {yakuComp.title} : {yakuComp.han}
-                </p>
+              <h3 className="scoreCompTitle">Han: {han}</h3>
+              <hr />
+              <div className="scoreCompMain">
+                {yakuList.map((yakuComp, index) => (
+                  <p key={index} className="scoreComp">
+                    {yakuComp.title} : {yakuComp.han}
+                  </p>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        <div className={fu ? "scoreBlock" : ""}>
+          {fu ? (
+            <div>
+              <h3 className="scoreCompTitle">Fu: {fu}</h3>
+              <hr />
+              <div className="scoreCompMain">
+                {fuList.map((fuComp, index) => (
+                  <p key={index} className="scoreComp">
+                    {fuComp.title} : {fuComp.fu}
+                  </p>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        <div className={yakuman ? "scoreBlock" : ""}>
+          {yakuman ? (
+            <div>
+              <h3 className="scoreCompTitle">Yakuman: {yakuman}</h3>
+              <hr />
+              <div className="scoreCompMain">
+                {yakumanList.map((yakumanComp, index) => (
+                  <p key={index} className="scoreComp">
+                    {yakumanComp.title} : {yakumanComp.yakuman}
+                  </p>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
+
+      <div className="resultHandMain">
+        <div className={menzenResult ? "resultHandPart" : ""}>
+          {menzenResult.map((block, blockIndex) => (
+            <div key={blockIndex} className="resultHandBlock">
+              {block.map((tile, index) => (
+                <img
+                  className="tile"
+                  key={index}
+                  src={`tiles/${tile}.png`}
+                  draggable="false"
+                />
               ))}
             </div>
-          </div>
-        ) : (
-          <></>
-        )}
-
-        {yakuman ? (
-          <div>
-            <h3>Yakuman</h3>
-            {yakuman}
-            <div>
-              {yakumanList.map((yakumanComp, index) => (
-                <p key={index}>
-                  {yakumanComp.title} : {yakumanComp.yakuman}
-                </p>
+          ))}
+        </div>
+        <div className={chiResult ? "resultHandPart" : ""}>
+          {chiResult.map((block, blockIndex) => (
+            <div key={blockIndex} className="resultHandBlock">
+              {block.map((tile, index) => (
+                <img
+                  className="tile"
+                  key={index}
+                  src={`tiles/${tile}.png`}
+                  draggable="false"
+                />
               ))}
             </div>
-          </div>
-        ) : (
-          <></>
-        )}
+          ))}
+        </div>
+        <div className={chiResult ? "resultHandPart" : ""}>
+          {ponResult.map((block, blockIndex) => (
+            <div key={blockIndex} className="resultHandBlock">
+              {block.map((tile, index) => (
+                <img
+                  className="tile"
+                  key={index}
+                  src={`tiles/${tile}.png`}
+                  draggable="false"
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className={chiResult ? "resultHandPart" : ""}>
+          {kanResult.map((block, blockIndex) => (
+            <div key={blockIndex} className="resultHandBlock">
+              {block.map((tile, index) => (
+                <img
+                  className="tile"
+                  key={index}
+                  src={`tiles/${tile}.png`}
+                  draggable="false"
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className={chiResult ? "resultHandPart" : ""}>
+          {ankanResult.map((block, blockIndex) => (
+            <div key={blockIndex} className="resultHandBlock">
+              {block.map((tile, index) => (
+                <img
+                  className="tile"
+                  key={index}
+                  src={`tiles/${index % 4 === 0 || index % 4 === 3 ? "B0" : tile}.png`}
+                  draggable="false"
+                />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-
-      <div>
-        {menzenResult.map((block, blockIndex) => (
-          <div key={blockIndex}>
-            {block.map((tile, index) => (
-              <img
-                className="tile"
-                key={index}
-                src={`tiles/${tile}.png`}
-                draggable="false"
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <div>
-        {chiResult.map((block, blockIndex) => (
-          <div key={blockIndex}>
-            {block.map((tile, index) => (
-              <img
-                className="tile"
-                key={index}
-                src={`tiles/${tile}.png`}
-                draggable="false"
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <div>
-        {ponResult.map((block, blockIndex) => (
-          <div key={blockIndex}>
-            {block.map((tile, index) => (
-              <img
-                className="tile"
-                key={index}
-                src={`tiles/${tile}.png`}
-                draggable="false"
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <div>
-        {kanResult.map((block, blockIndex) => (
-          <div key={blockIndex}>
-            {block.map((tile, index) => (
-              <img
-                className="tile"
-                key={index}
-                src={`tiles/${tile}.png`}
-                draggable="false"
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <div>
-        {ankanResult.map((block, blockIndex) => (
-          <div key={blockIndex}>
-            {block.map((tile, index) => (
-              <img
-                className="tile"
-                key={index}
-                src={`tiles/${tile}.png`}
-                draggable="false"
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      <hr />
     </>
   );
 }

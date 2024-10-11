@@ -1,0 +1,46 @@
+.resultHandMain {
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+}
+
+.resultHandPart {
+  display: flex;
+  justify-content: center;
+}
+
+.resultHandBlock {
+  margin: 10px 5px;
+}
+
+.point {
+  margin: 0px 0px;
+  padding: 5px 0px;
+  font-size: 40px;
+}
+
+.resultMain,
+.payment {
+  display: flex;
+  justify-content: center;
+}
+
+.scoreBlock {
+  /* border: solid; */
+  /* border-width: 1px; */
+  padding: 10px 10px;
+  display: flex;
+  margin: 5px 10px;
+}
+
+.scoreComp {
+  margin: 0px 5px;
+}
+
+.scoreCompMain {
+  text-align: left;
+}
+
+.scoreCompTitle {
+  margin: 5px 5px;
+}

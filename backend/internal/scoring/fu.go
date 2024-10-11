@@ -102,12 +102,12 @@ func koutsuFu(hand *types.WinningHand) {
 		if utils.CheckKoutsuBlock(block) {
 			//ankou termhonor 8
 			if terminalHonors[block[0][:2]] {
-				FuAdded := types.FuComponet{Fu: 8, Title: fmt.Sprintf("%s Ankou", block[0][:2])}
+				FuAdded := types.FuComponet{Fu: 8, Title: fmt.Sprintf("Ankou")}
 				hand.HandScore.FuList = append(hand.HandScore.FuList, &FuAdded)
 
 			} else //ankou simple 4
 			{
-				FuAdded := types.FuComponet{Fu: 4, Title: fmt.Sprintf("%s Ankou", block[0][:2])}
+				FuAdded := types.FuComponet{Fu: 4, Title: fmt.Sprintf("Ankou")}
 				hand.HandScore.FuList = append(hand.HandScore.FuList, &FuAdded)
 
 			}
@@ -118,12 +118,12 @@ func koutsuFu(hand *types.WinningHand) {
 	for _, block := range hand.HandParts.Pon {
 		//minkou terminal
 		if terminalHonors[block[0][:2]] {
-			FuAdded := types.FuComponet{Fu: 4, Title: fmt.Sprintf("%s Minkou", block[0][:2])}
+			FuAdded := types.FuComponet{Fu: 4, Title: fmt.Sprintf("Minkou")}
 			hand.HandScore.FuList = append(hand.HandScore.FuList, &FuAdded)
 
 		} else //minkou simple 2
 		{
-			FuAdded := types.FuComponet{Fu: 2, Title: fmt.Sprintf("%s Minkou", block[0][:2])}
+			FuAdded := types.FuComponet{Fu: 2, Title: fmt.Sprintf("Minkou")}
 			hand.HandScore.FuList = append(hand.HandScore.FuList, &FuAdded)
 
 		}
@@ -151,12 +151,12 @@ func kantsuFu(hand *types.WinningHand) {
 	for _, block := range hand.HandParts.Ankan {
 		//ankan terminal 32
 		if terminalHonors[block[0][:2]] {
-			FuAdded := types.FuComponet{Fu: 32, Title: fmt.Sprintf("%s Ankan", block[0][:2])}
+			FuAdded := types.FuComponet{Fu: 32, Title: fmt.Sprintf("Ankan")}
 			hand.HandScore.FuList = append(hand.HandScore.FuList, &FuAdded)
 
 		} else //ankan simple
 		{
-			FuAdded := types.FuComponet{Fu: 16, Title: fmt.Sprintf("%s Ankan", block[0][:2])}
+			FuAdded := types.FuComponet{Fu: 16, Title: fmt.Sprintf("Ankan")}
 			hand.HandScore.FuList = append(hand.HandScore.FuList, &FuAdded)
 
 		}
@@ -166,12 +166,12 @@ func kantsuFu(hand *types.WinningHand) {
 	for _, block := range hand.HandParts.Kan {
 		//minkou terminal
 		if terminalHonors[block[0][:2]] {
-			FuAdded := types.FuComponet{Fu: 16, Title: fmt.Sprintf("%s Minkan", block[0][:2])}
+			FuAdded := types.FuComponet{Fu: 16, Title: fmt.Sprintf("Minkan")}
 			hand.HandScore.FuList = append(hand.HandScore.FuList, &FuAdded)
 
 		} else //minkou simple 2
 		{
-			FuAdded := types.FuComponet{Fu: 8, Title: fmt.Sprintf("%s Minkan", block[0][:2])}
+			FuAdded := types.FuComponet{Fu: 8, Title: fmt.Sprintf("Minkan")}
 			hand.HandScore.FuList = append(hand.HandScore.FuList, &FuAdded)
 
 		}

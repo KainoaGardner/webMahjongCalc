@@ -211,7 +211,28 @@ function ScoringOptions({
 
   return (
     <>
-      <div>
+      <div className="kaze">
+        <div className="kazePart">
+          <h2 className="kazeTitle">Bakaze</h2>
+          <img
+            className="tile"
+            src={`tiles/${bakaze}.png`}
+            draggable="false"
+            onClick={() => changeBakaze()}
+          />
+        </div>
+        <div className="kazePart">
+          <h2 className="kazeTitle">Jikaze</h2>
+          <img
+            className="tile"
+            src={`tiles/${jikaze}.png`}
+            draggable="false"
+            onClick={() => changeJikaze()}
+          />
+        </div>
+      </div>
+
+      <div className="scoringOptions">
         <button onClick={() => setOya(!oya)}>{oya ? "Oya" : "Ko"}</button>
         <button onClick={() => setAgari(!agari)}>
           {agari ? "Ron" : "Tsumo"}
@@ -283,27 +304,6 @@ function ScoringOptions({
             </button>
             {riichibou}
             <button onClick={() => setRiichibou(riichibou + 1)}>+</button>
-          </div>
-        </div>
-
-        <div>
-          <div>
-            <h2>Bakaze</h2>
-            <img
-              className="tile"
-              src={`tiles/${bakaze}.png`}
-              draggable="false"
-              onClick={() => changeBakaze()}
-            />
-          </div>
-          <div>
-            <h2>Jikaze</h2>
-            <img
-              className="tile"
-              src={`tiles/${jikaze}.png`}
-              draggable="false"
-              onClick={() => changeJikaze()}
-            />
           </div>
         </div>
       </div>

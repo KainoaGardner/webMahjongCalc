@@ -57,10 +57,9 @@ func getScore(hand *types.WinningHand) error {
 	fu := hand.HandScore.Fu
 	yakuman := hand.HandScore.Yakuman
 
-	if checkNoYaku(hand) {
+	if checkNoYaku(hand) && yakuman == 0 {
 		basicPoints = 0
 		scoreType = "No Yaku"
-
 	} else if han == 5 ||
 		(han == 4 && fu >= 40) || (han == 3 && fu >= 70) ||
 		hand.ScoringParts.Kiriage && (han == 4 && fu >= 30) || (han == 3 && fu >= 60) {

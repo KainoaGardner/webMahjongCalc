@@ -1,4 +1,5 @@
 import "./Hand.css";
+import "./Tenpai.css";
 import { useState, useEffect } from "react";
 
 function Tenpai({ hand, chi, pon, kan, ankan }) {
@@ -54,7 +55,7 @@ function Tenpai({ hand, chi, pon, kan, ankan }) {
       <div>
         {tenpai.map((tile, index) => (
           <img
-            className="tile"
+            className="tenpaiTile"
             key={index}
             src={`tiles/${tile}.png`}
             draggable="false"

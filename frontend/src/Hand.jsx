@@ -214,215 +214,240 @@ function Hand() {
 
   return (
     <>
-      {hand.length +
-        chi.length +
-        pon.length +
-        (kan.length - parseInt(kan.length / 4)) +
-        (ankan.length - parseInt(ankan.length / 4)) ===
-        14 && (
-        <Results
-          hand={hand}
-          chi={chi}
-          pon={pon}
-          kan={kan}
-          ankan={ankan}
-          oya={oya}
-          agari={agari}
-          riichi={riichi}
-          ippatsu={ippatsu}
-          chankan={chankan}
-          rinshan={rinshan}
-          haitei={haitei}
-          tenhou={tenhou}
-          honba={honba}
-          riichibou={riichibou}
-          kiriage={kiriage}
-          bakaze={bakaze}
-          jikaze={jikaze}
-          dora={dora}
-          uradora={uradora}
-        />
-      )}
+      <div className="mainBody">
+        <div className="leftMain">
+          <div>
+            {hand.length +
+              chi.length +
+              pon.length +
+              (kan.length - parseInt(kan.length / 4)) +
+              (ankan.length - parseInt(ankan.length / 4)) ===
+              14 && (
+              <Results
+                hand={hand}
+                chi={chi}
+                pon={pon}
+                kan={kan}
+                ankan={ankan}
+                oya={oya}
+                agari={agari}
+                riichi={riichi}
+                ippatsu={ippatsu}
+                chankan={chankan}
+                rinshan={rinshan}
+                haitei={haitei}
+                tenhou={tenhou}
+                honba={honba}
+                riichibou={riichibou}
+                kiriage={kiriage}
+                bakaze={bakaze}
+                jikaze={jikaze}
+                dora={dora}
+                uradora={uradora}
+              />
+            )}
 
-      {hand.length +
-        chi.length +
-        pon.length +
-        (kan.length - parseInt(kan.length / 4)) +
-        (ankan.length - parseInt(ankan.length / 4)) ===
-        13 && (
-        <Tenpai hand={hand} chi={chi} pon={pon} kan={kan} ankan={ankan} />
-      )}
-      <div>
-        <div>
-          {hand.map((tile, index) => (
-            <img
-              className="tile"
-              key={index}
-              src={`tiles/${tile}.png`}
-              draggable="false"
-              onClick={() => removeTile(tile, index)}
+            {hand.length +
+              chi.length +
+              pon.length +
+              (kan.length - parseInt(kan.length / 4)) +
+              (ankan.length - parseInt(ankan.length / 4)) ===
+              13 && (
+              <Tenpai hand={hand} chi={chi} pon={pon} kan={kan} ankan={ankan} />
+            )}
+
+            <div className="handMain">
+              <div className={hand.length ? "handPart" : ""}>
+                {hand.map((tile, index) => (
+                  <img
+                    className="tile"
+                    key={index}
+                    src={`tiles/${tile}.png`}
+                    draggable="false"
+                    onClick={() => removeTile(tile, index)}
+                  />
+                ))}
+              </div>
+
+              <div className={chi.length ? "handPart" : ""}>
+                {chi.map((tile, index) => (
+                  <img
+                    className="tile"
+                    key={index}
+                    src={`tiles/${tile}.png`}
+                    draggable="false"
+                    onClick={() => removeChi(tile, index)}
+                  />
+                ))}
+              </div>
+
+              <div className={pon.length ? "handPart" : ""}>
+                {pon.map((tile, index) => (
+                  <img
+                    className="tile"
+                    key={index}
+                    src={`tiles/${tile}.png`}
+                    draggable="false"
+                    onClick={() => removePon(tile, index)}
+                  />
+                ))}
+              </div>
+
+              <div className={kan.length ? "handPart" : ""}>
+                {kan.map((tile, index) => (
+                  <img
+                    className="tile"
+                    key={index}
+                    src={`tiles/${tile}.png`}
+                    draggable="false"
+                    onClick={() => removeKan(tile, index)}
+                  />
+                ))}
+              </div>
+
+              <div className={ankan ? "handPart" : ""}>
+                {ankan.map((tile, index) => (
+                  <img
+                    className="tile"
+                    key={index}
+                    src={`tiles/${tile}.png`}
+                    draggable="false"
+                    onClick={() => removeAnkan(tile, index)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div>
+              {hand.length +
+                chi.length +
+                pon.length +
+                kan.length +
+                ankan.length -
+                parseInt(ankan.length / 4) >
+                0 && (
+                <button className="clearHand" onClick={() => clearHand()}>
+                  Clear
+                </button>
+              )}
+
+              <div>
+                <button
+                  onClick={() => changeCallType("chi")}
+                  className={callType === "chi" ? "" : "off"}
+                >
+                  Chi
+                </button>
+                <button
+                  onClick={() => changeCallType("pon")}
+                  className={callType === "pon" ? "" : "off"}
+                >
+                  Pon
+                </button>
+                <button
+                  onClick={() => changeCallType("kan")}
+                  className={callType === "kan" ? "" : "off"}
+                >
+                  Kan
+                </button>
+                <button
+                  onClick={() => changeCallType("ankan")}
+                  className={callType === "ankan" ? "" : "off"}
+                >
+                  Ankan
+                </button>
+                <button
+                  onClick={() => setAkaCall(!akaCall)}
+                  className={akaCall ? "" : "off"}
+                >
+                  Call with akadora
+                </button>
+              </div>
+            </div>
+
+            <AddTiles
+              hand={hand}
+              setHand={(array) => setHand(array)}
+              chi={chi}
+              setChi={(array) => setChi(array)}
+              pon={pon}
+              setPon={(array) => setPon(array)}
+              kan={kan}
+              setKan={(array) => setKan(array)}
+              ankan={ankan}
+              setAnkan={(array) => setAnkan(array)}
+              callType={callType}
+              setCallType={(string) => setCallType(string)}
+              akaCall={akaCall}
+              tileCount={tileCount}
+              setTileCount={(map) => setTileCount(map)}
+              dora={dora}
+              setDora={(array) => setDora(array)}
+              uradora={uradora}
+              setUradora={(array) => setUradora(array)}
+              doraIndex={doraIndex}
+              setDoraIndex={setDoraIndex}
+              uradoraIndex={uradoraIndex}
+              setUradoraIndex={setUradoraIndex}
             />
-          ))}
+          </div>
         </div>
 
-        <div>
-          {chi.map((tile, index) => (
-            <img
-              className="tile"
-              key={index}
-              src={`tiles/${tile}.png`}
-              draggable="false"
-              onClick={() => removeChi(tile, index)}
-            />
-          ))}
-        </div>
+        <div className="rightMain">
+          <div className="doraMain">
+            <div>
+              <Dora
+                tileCount={tileCount}
+                setTileCount={(map) => setTileCount(map)}
+                dora={dora}
+                setDora={(array) => setDora(array)}
+                uradora={uradora}
+                setUradora={(array) => setUradora(array)}
+                doraIndex={doraIndex}
+                setDoraIndex={setDoraIndex}
+                uradoraIndex={uradoraIndex}
+                setUradoraIndex={setUradoraIndex}
+              />
+            </div>
+            <button className="doraClear" onClick={() => clearDora()}>
+              Clear
+            </button>
+          </div>
 
-        <div>
-          {pon.map((tile, index) => (
-            <img
-              className="tile"
-              key={index}
-              src={`tiles/${tile}.png`}
-              draggable="false"
-              onClick={() => removePon(tile, index)}
-            />
-          ))}
-        </div>
-
-        <div>
-          {kan.map((tile, index) => (
-            <img
-              className="tile"
-              key={index}
-              src={`tiles/${tile}.png`}
-              draggable="false"
-              onClick={() => removeKan(tile, index)}
-            />
-          ))}
-        </div>
-
-        <div>
-          {ankan.map((tile, index) => (
-            <img
-              className="tile"
-              key={index}
-              src={`tiles/${tile}.png`}
-              draggable="false"
-              onClick={() => removeAnkan(tile, index)}
-            />
-          ))}
+          <ScoringOptions
+            chi={chi}
+            pon={pon}
+            kan={kan}
+            ankan={ankan}
+            oya={oya}
+            setOya={setOya}
+            agari={agari}
+            setAgari={setAgari}
+            riichi={riichi}
+            setRiichi={setRiichi}
+            ippatsu={ippatsu}
+            setIppatsu={setIppatsu}
+            chankan={chankan}
+            setChankan={setChankan}
+            rinshan={rinshan}
+            setRinshan={setRinshan}
+            haitei={haitei}
+            setHaitei={setHaitei}
+            tenhou={tenhou}
+            setTenhou={setTenhou}
+            honba={honba}
+            setHonba={setHonba}
+            riichibou={riichibou}
+            setRiichibou={setRiichibou}
+            kiriage={kiriage}
+            setKiriage={setKiriage}
+            bakaze={bakaze}
+            setBakaze={setBakaze}
+            jikaze={jikaze}
+            setJikaze={setJikaze}
+          />
         </div>
       </div>
-
-      <button onClick={() => clearHand()}>Clear</button>
-      <div>
-        <button
-          onClick={() => changeCallType("chi")}
-          className={callType === "chi" ? "" : "off"}
-        >
-          Chi
-        </button>
-        <button
-          onClick={() => changeCallType("pon")}
-          className={callType === "pon" ? "" : "off"}
-        >
-          Pon
-        </button>
-        <button
-          onClick={() => changeCallType("kan")}
-          className={callType === "kan" ? "" : "off"}
-        >
-          Kan
-        </button>
-        <button
-          onClick={() => changeCallType("ankan")}
-          className={callType === "ankan" ? "" : "off"}
-        >
-          Ankan
-        </button>
-        <button
-          onClick={() => setAkaCall(!akaCall)}
-          className={akaCall ? "" : "off"}
-        >
-          Call with akadora
-        </button>
-      </div>
-
-      <AddTiles
-        hand={hand}
-        setHand={(array) => setHand(array)}
-        chi={chi}
-        setChi={(array) => setChi(array)}
-        pon={pon}
-        setPon={(array) => setPon(array)}
-        kan={kan}
-        setKan={(array) => setKan(array)}
-        ankan={ankan}
-        setAnkan={(array) => setAnkan(array)}
-        callType={callType}
-        setCallType={(string) => setCallType(string)}
-        akaCall={akaCall}
-        tileCount={tileCount}
-        setTileCount={(map) => setTileCount(map)}
-        dora={dora}
-        setDora={(array) => setDora(array)}
-        uradora={uradora}
-        setUradora={(array) => setUradora(array)}
-        doraIndex={doraIndex}
-        setDoraIndex={setDoraIndex}
-        uradoraIndex={uradoraIndex}
-        setUradoraIndex={setUradoraIndex}
-      />
-
-      <div>
-        <Dora
-          tileCount={tileCount}
-          setTileCount={(map) => setTileCount(map)}
-          dora={dora}
-          setDora={(array) => setDora(array)}
-          uradora={uradora}
-          setUradora={(array) => setUradora(array)}
-          doraIndex={doraIndex}
-          setDoraIndex={setDoraIndex}
-          uradoraIndex={uradoraIndex}
-          setUradoraIndex={setUradoraIndex}
-        />
-
-        <button onClick={() => clearDora()}>Clear</button>
-      </div>
-
-      <ScoringOptions
-        chi={chi}
-        pon={pon}
-        kan={kan}
-        ankan={ankan}
-        oya={oya}
-        setOya={setOya}
-        agari={agari}
-        setAgari={setAgari}
-        riichi={riichi}
-        setRiichi={setRiichi}
-        ippatsu={ippatsu}
-        setIppatsu={setIppatsu}
-        chankan={chankan}
-        setChankan={setChankan}
-        rinshan={rinshan}
-        setRinshan={setRinshan}
-        haitei={haitei}
-        setHaitei={setHaitei}
-        tenhou={tenhou}
-        setTenhou={setTenhou}
-        honba={honba}
-        setHonba={setHonba}
-        riichibou={riichibou}
-        setRiichibou={setRiichibou}
-        kiriage={kiriage}
-        setKiriage={setKiriage}
-        bakaze={bakaze}
-        setBakaze={setBakaze}
-        jikaze={jikaze}
-        setJikaze={setJikaze}
-      />
     </>
   );
 }

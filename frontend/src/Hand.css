@@ -13,3 +13,45 @@
   overflow: hidden;
   position: relative;
 }
+
+.handMain {
+  white-space: nowrap;
+  display: flex;
+
+  justify-content: center;
+}
+
+.handPart {
+  margin: 10px 5px;
+}
+
+.mainBody {
+  display: flex;
+  justify-content: space-between;
+}
+
+.leftMain {
+  white-space: nowrap;
+  margin: 15px 15px;
+  height: 100%;
+  width: 1200px;
+}
+.rightMain {
+  height: 100%;
+  margin: 15px 15px;
+  white-space: nowrap;
+}
+
+.doraMain {
+  justify-content: center;
+}
+
+.doraClear {
+  margin: 15px 10px;
+  width: 264px;
+}
+
+.clearHand {
+  width: 250px;
+  margin: 10px 10px;
+}
