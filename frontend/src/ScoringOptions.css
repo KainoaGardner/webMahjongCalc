@@ -1,7 +1,9 @@
 button {
   margin: 2px;
+  background-color: #000000;
 }
-.off {
+
+.on {
   background-color: #000000;
 }
 

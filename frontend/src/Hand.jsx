@@ -164,6 +164,8 @@ function Hand() {
 
   function clearHand() {
     setCallType("");
+    setDoraIndex(-1);
+    setUradoraIndex(-1);
     for (let i = hand.length; i >= 0; i--) {
       tileCount.set(hand[i], tileCount.get(hand[i]) - 1);
     }
@@ -247,20 +249,28 @@ function Hand() {
               />
             )}
 
-            {hand.length +
-              chi.length +
-              pon.length +
-              (kan.length - parseInt(kan.length / 4)) +
-              (ankan.length - parseInt(ankan.length / 4)) ===
-              13 && (
-              <Tenpai hand={hand} chi={chi} pon={pon} kan={kan} ankan={ankan} />
-            )}
+            <div className="tenpaiMain">
+              {hand.length +
+                chi.length +
+                pon.length +
+                (kan.length - parseInt(kan.length / 4)) +
+                (ankan.length - parseInt(ankan.length / 4)) ===
+                13 && (
+                <Tenpai
+                  hand={hand}
+                  chi={chi}
+                  pon={pon}
+                  kan={kan}
+                  ankan={ankan}
+                />
+              )}
+            </div>
 
             <div className="handMain">
               <div className={hand.length ? "handPart" : ""}>
                 {hand.map((tile, index) => (
                   <img
-                    className="tile"
+                    className={"tile"}
                     key={index}
                     src={`tiles/${tile}.png`}
                     draggable="false"
@@ -325,40 +335,42 @@ function Hand() {
                 kan.length +
                 ankan.length -
                 parseInt(ankan.length / 4) >
-                0 && (
+              0 ? (
                 <button className="clearHand" onClick={() => clearHand()}>
                   Clear
                 </button>
+              ) : (
+                <div className="clearHand"></div>
               )}
 
               <div>
                 <button
                   onClick={() => changeCallType("chi")}
-                  className={callType === "chi" ? "" : "off"}
+                  className={callType === "chi" ? "on" : "off"}
                 >
                   Chi
                 </button>
                 <button
                   onClick={() => changeCallType("pon")}
-                  className={callType === "pon" ? "" : "off"}
+                  className={callType === "pon" ? "on" : "off"}
                 >
                   Pon
                 </button>
                 <button
                   onClick={() => changeCallType("kan")}
-                  className={callType === "kan" ? "" : "off"}
+                  className={callType === "kan" ? "on" : "off"}
                 >
                   Kan
                 </button>
                 <button
                   onClick={() => changeCallType("ankan")}
-                  className={callType === "ankan" ? "" : "off"}
+                  className={callType === "ankan" ? "on" : "off"}
                 >
                   Ankan
                 </button>
                 <button
                   onClick={() => setAkaCall(!akaCall)}
-                  className={akaCall ? "" : "off"}
+                  className={akaCall ? "on" : "off"}
                 >
                   Call with akadora
                 </button>

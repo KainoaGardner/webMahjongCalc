@@ -63,6 +63,37 @@ function Results({
     return newAnkan;
   }
 
+  function getDora(doraIndicator) {
+    const dora = [];
+    for (let i = 0; i < doraIndicator.length; i++) {
+      if (doraIndicator[i] === "B0") {
+        continue;
+      }
+      const tile = doraIndicator[i];
+      let tileNumber = parseInt(tile[1]) + 1;
+      if (tile[0] === "H") {
+        if (tileNumber === 5) {
+          tileNumber = 1;
+        } else if (tileNumber === 8) {
+          tileNumber = 5;
+        }
+      } else {
+        if (tileNumber > 9) {
+          tileNumber = 1;
+        }
+      }
+
+      tileNumber = tileNumber.toString();
+      let newTile = tile[0] + tileNumber;
+      if (tile.length > 2) {
+        newTile += tile[2];
+      }
+
+      dora.push(newTile);
+    }
+    return dora;
+  }
+
   const handParts = {
     Menzen: hand,
     Chi: chi,
@@ -72,8 +103,8 @@ function Results({
   };
 
   const scoringParts = {
-    Dora: dora.filter((d) => d !== "B0"),
-    Uradora: uradora.filter((d) => d !== "B0"),
+    Dora: getDora(dora),
+    Uradora: getDora(uradora),
     Oya: oya,
     Bakaze: bakaze,
     Jikaze: jikaze,
@@ -99,6 +130,7 @@ function Results({
   };
 
   const scorePost = async () => {
+    console.log(scoreHandPost);
     try {
       const response = await fetch("http://" + API_URL + "points", {
         method: "POST",
@@ -115,6 +147,7 @@ function Results({
       }
     } catch (error) {
       console.log(error);
+      setScore();
     }
   };
 
@@ -179,16 +212,14 @@ function Results({
 
   return (
     <>
-      <div>
+      <div className="result">
         <h2 className="point">{scoreType}</h2>
         <h2 className="point">{score !== 0 ? score : ""} </h2>
-        <hr />
 
         <div className="payment">
           <div>
             {!agari ? (
               <div className="scoreCompMain">
-                <hr />
                 {!oya ? (
                   <p className="scoreComp">Oya Payment : {oyaPayment}</p>
                 ) : (
@@ -259,6 +290,7 @@ function Results({
         </div>
       </div>
 
+      {menzenResult.length === 0 ? <h2>Invalid Hand</h2> : <></>}
       <div className="resultHandMain">
         <div className={menzenResult ? "resultHandPart" : ""}>
           {menzenResult.map((block, blockIndex) => (

@@ -3,9 +3,7 @@
 function Information() {
   return (
     <>
-      <a href="https://github.com/KainoaGardner/webMahjongCalc">
-        Github Project
-      </a>
+      <a href="https://github.com/KainoaGardner/webMahjongCalc">Github</a>
     </>
   );
 }

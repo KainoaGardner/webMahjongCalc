@@ -264,7 +264,7 @@ func rinshan(hand *types.WinningHand) {
 }
 
 func chankan(hand *types.WinningHand) {
-	if hand.ScoringParts.Ron && hand.ScoringParts.Chankan || !hand.ScoringParts.Ron {
+	if hand.ScoringParts.Ron && hand.ScoringParts.Chankan {
 		chankan := types.YakuComponet{Han: 1, Title: "Chankan"}
 		hand.HandScore.YakuList = append(hand.HandScore.YakuList, &chankan)
 	}
@@ -462,8 +462,8 @@ func sanankou(hand *types.WinningHand) {
 		}
 	}
 
-	if ankouCount == 3 {
-		if hand.ScoringParts.Tsumo || !winTileInKoutsu || (winTileInKoutsu && winTileInShuntsu) {
+	if ankouCount >= 3 {
+		if ankouCount == 4 || hand.ScoringParts.Tsumo || !winTileInKoutsu || (winTileInKoutsu && winTileInShuntsu) {
 
 			sanankou := types.YakuComponet{Han: 2, Title: "Sanankou"}
 			hand.HandScore.YakuList = append(hand.HandScore.YakuList, &sanankou)
@@ -511,11 +511,24 @@ func sankantsu(hand *types.WinningHand) {
 }
 
 func honitsu(hand *types.WinningHand) {
-	for i := 1; i < len(hand.Hand); i++ {
+	var suit byte
+	var jihai bool
+	for i := 0; i < len(hand.Hand); i++ {
 		//it no honor and suits are not equal
-		if hand.Hand[i][0][0] != 'H' && hand.Hand[i-1][0][0] != 'H' && hand.Hand[i][0][0] != hand.Hand[i-1][0][0] {
+		if hand.Hand[i][0][0] == 'H' {
+			jihai = true
+			continue
+		}
+		if suit == 0 {
+			suit = hand.Hand[i][0][0]
+		}
+		if suit != '0' && hand.Hand[i][0][0] != suit {
 			return
 		}
+	}
+
+	if !jihai || suit == 0 {
+		return
 	}
 
 	honitsu := types.YakuComponet{Han: 3, Title: "Honitsu"}

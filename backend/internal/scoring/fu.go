@@ -9,10 +9,13 @@ import (
 
 func getFu(currentHand *types.WinningHand) {
 
+	fmt.Println(currentHand.Hand)
 	//chiitoitsu
 	if len(currentHand.Hand) == 7 {
+		fmt.Println("chiitoitsu")
 		FuAdded := types.FuComponet{Fu: 25, Title: "Chiitoitsu"}
 		currentHand.HandScore.FuList = append(currentHand.HandScore.FuList, &FuAdded)
+		currentHand.HandScore.Fu = getTotalFu(currentHand)
 
 	} else {
 		FuAdded := types.FuComponet{Fu: 20, Title: "Fuutei"}
@@ -31,6 +34,7 @@ func getFu(currentHand *types.WinningHand) {
 
 		currentHand.HandScore.Fu = utils.CeilTen(getTotalFu(currentHand))
 	}
+
 }
 
 func getTotalFu(hand *types.WinningHand) int {

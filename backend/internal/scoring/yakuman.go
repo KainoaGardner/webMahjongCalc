@@ -141,16 +141,19 @@ func chuurenpoutou(hand *types.WinningHand) {
 		}
 	}
 
-	for tile, amount := range tileCount {
-		if tile == '1' || tile == '9' {
-			if amount < 3 {
+	for i := 1; i <= 9; i++ {
+		tile := byte(i + 48)
+		if i == 1 || i == 9 {
+			if tileCount[tile] < 3 {
 				return
-			} else {
-				if amount < 1 {
-					return
-				}
+			}
+		} else {
+			if tileCount[tile] < 1 {
+				return
+
 			}
 		}
+
 	}
 
 	chuuren := types.YakumanComponet{Yakuman: 1, Title: "Chuuren Poutou"}

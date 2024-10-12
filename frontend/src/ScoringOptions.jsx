@@ -155,21 +155,21 @@ function ScoringOptions({
     if (chi.length + pon.length + kan.length > 0) {
       return riichi === "None" ? "off notValid" : "notValid";
     }
-    return riichi === "None" ? "off" : "";
+    return riichi === "None" ? "off" : "on";
   }
 
   function checkValidIppatsu() {
     if (riichi === "None") {
       return ippatsu ? "notValid" : "off notValid";
     }
-    return ippatsu ? "" : "off";
+    return ippatsu ? "on" : "off";
   }
 
   function checkValidChankan() {
     if (!agari) {
       return chankan ? "notValid" : "off notValid";
     }
-    return chankan ? "" : "off";
+    return chankan ? "on" : "off";
   }
 
   function checkValidRinshan() {
@@ -177,7 +177,7 @@ function ScoringOptions({
       return rinshan ? "notValid" : "off notValid";
     }
 
-    return rinshan ? "" : "off";
+    return rinshan ? "on" : "off";
   }
 
   function checkValidTenhou() {
@@ -185,7 +185,7 @@ function ScoringOptions({
       return tenhou === "None" ? "off notValid" : "notValid";
     }
 
-    return tenhou === "None" ? "off" : "";
+    return tenhou === "None" ? "off" : "on";
   }
 
   useEffect(() => {
@@ -233,8 +233,10 @@ function ScoringOptions({
       </div>
 
       <div className="scoringOptions">
-        <button onClick={() => setOya(!oya)}>{oya ? "Oya" : "Ko"}</button>
-        <button onClick={() => setAgari(!agari)}>
+        <button className="on" onClick={() => setOya(!oya)}>
+          {oya ? "Oya" : "Ko"}
+        </button>
+        <button className="on" onClick={() => setAgari(!agari)}>
           {agari ? "Ron" : "Tsumo"}
         </button>
         <button onClick={() => changeRiichi()} className={checkValidRiichi()}>
@@ -251,7 +253,7 @@ function ScoringOptions({
         </button>
         <button
           onClick={() => changeHaitei()}
-          className={haitei === "None" ? "off" : ""}
+          className={haitei === "None" ? "off" : "on"}
         >
           {(() => {
             if (haitei === "None" && agari) {
@@ -276,7 +278,7 @@ function ScoringOptions({
         </button>
         <button
           onClick={() => setKiriage(!kiriage)}
-          className={kiriage ? "" : "off"}
+          className={kiriage ? "on" : "off"}
         >
           Kiriage
         </button>

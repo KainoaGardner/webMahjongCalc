@@ -36,7 +36,7 @@ function AddTiles({
       (kan.length - parseInt(kan.length / 4)) +
       (ankan.length - parseInt(ankan.length / 4));
 
-    if (totalTiles < 14) {
+    if (totalTiles < 14 || doraIndex !== -1 || uradoraIndex !== -1) {
       const tiles = tileCount.get(tile);
       let akaTiles = tileCount.get(tile.concat("A"));
       if (!akaTiles) {

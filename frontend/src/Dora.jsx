@@ -38,7 +38,7 @@ function Dora({
   return (
     <>
       <div>
-        <h2 className="doraTitle">Dora</h2>
+        <h2 className="doraTitle">Dora Indicator</h2>
         {dora.map((tile, index) => (
           <img
             className={doraIndex === index ? "selected tile" : "tile"}
@@ -51,7 +51,7 @@ function Dora({
       </div>
 
       <div>
-        <h2 className="doraTitle">Uradora</h2>
+        <h2 className="doraTitle">Uradora Indicator</h2>
         {uradora.map((tile, index) => (
           <img
             className={uradoraIndex === index ? "selected tile" : "tile"}

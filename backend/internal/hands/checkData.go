@@ -96,8 +96,8 @@ func checkEachTileAmount(hand *types.PostHandScore) error {
 	getEachTileAmount(hand.Hand.Pon, count)
 	getEachTileAmount(hand.Hand.Kan, count)
 	getEachTileAmount(hand.Hand.Ankan, count)
-	getEachTileAmount(hand.ScoringParts.Dora, count)
-	getEachTileAmount(hand.ScoringParts.Uradora, count)
+	getEachTileAmount(getDoraIndicator(hand.ScoringParts.Dora), count)
+	getEachTileAmount(getDoraIndicator(hand.ScoringParts.Uradora), count)
 
 	for _, total := range count {
 		if total > 4 {
@@ -138,11 +138,11 @@ func checkValidTiles(hand *types.PostHandScore) error {
 	if err != nil {
 		return err
 	}
-	err = checkValidTile(hand.ScoringParts.Dora)
+	err = checkValidTile(getDoraIndicator(hand.ScoringParts.Dora))
 	if err != nil {
 		return err
 	}
-	err = checkValidTile(hand.ScoringParts.Uradora)
+	err = checkValidTile(getDoraIndicator(hand.ScoringParts.Uradora))
 	if err != nil {
 		return err
 	}
@@ -192,7 +192,8 @@ func checkMultipleAkaDora(hand *types.PostHandScore) error {
 	getEachTileAkaDora(hand.Hand.Pon, count)
 	getEachTileAkaDora(hand.Hand.Kan, count)
 	getEachTileAkaDora(hand.Hand.Ankan, count)
-	getEachTileAkaDora(hand.ScoringParts.Dora, count)
+	getEachTileAkaDora(getDoraIndicator(hand.ScoringParts.Dora), count)
+	getEachTileAkaDora(getDoraIndicator(hand.ScoringParts.Uradora), count)
 
 	for _, amount := range count {
 		if amount > 1 {
@@ -215,4 +216,36 @@ func checkOpenRiichi(hand *types.PostHandScore) error {
 	}
 
 	return nil
+}
+
+func getDoraIndicator(dora []string) []string {
+	var doraIndicator []string
+
+	for _, doraTile := range dora {
+		tileNumber := int(doraTile[1] - '0')
+		tileNumber--
+		if doraTile[0] == 'H' {
+			if tileNumber == 0 {
+				tileNumber = 4
+			} else if tileNumber == 4 {
+				tileNumber = 7
+			}
+		} else {
+			if tileNumber <= 0 {
+				tileNumber = 9
+			}
+		}
+
+		var newTile string
+		if len(doraTile) >= 3 {
+
+			newTile = fmt.Sprintf("%c%d%c", doraTile[0], tileNumber, doraTile[2])
+		} else {
+			newTile = fmt.Sprintf("%c%d", doraTile[0], tileNumber)
+
+		}
+		doraIndicator = append(doraIndicator, newTile)
+	}
+
+	return doraIndicator
 }
