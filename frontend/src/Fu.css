@@ -1,0 +1,51 @@
+.table {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.tableMain {
+  border-collapse: collapse;
+  background-color: #3f3f3f;
+  width: 1000px;
+  text-align: center;
+}
+
+.tableTriple {
+  border-collapse: collapse;
+  background-color: #3f3f3f;
+  text-align: center;
+  width: 300px;
+}
+
+.tablePayments {
+  border-collapse: collapse;
+  background-color: #3f3f3f;
+  text-align: center;
+  width: 1000px;
+}
+
+.fuMain {
+  place-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+td,
+th {
+  font-size: 12px;
+  border: 1px solid #717171;
+  padding: 10px;
+  width: 50px;
+}
+
+h2 {
+  margin-top: 30px;
+}
+.fuItem {
+  background-color: #3f3f3f;
+  padding: 10px 10px;
+  margin: 5px 5px;
+  text-align: left;
+}

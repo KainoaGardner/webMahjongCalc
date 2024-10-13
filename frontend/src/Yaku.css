@@ -1,0 +1,22 @@
+.yakuItem {
+  background-color: #3f3f3f;
+  padding: 10px 10px;
+  margin: 5px 5px;
+}
+
+h2,
+h3,
+p {
+  margin: 2px 0px;
+  border-collapse: collapse;
+}
+
+.exampleHand {
+  margin: 10px 0px;
+  white-space: nowrap;
+}
+
+.hanTitle {
+  margin-top: 30px;
+  text-align: center;
+}

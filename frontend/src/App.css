@@ -10,3 +10,17 @@
   margin: 10px;
   padding: 10px;
 }
+
+.nav {
+  background-color: #3f3f3f;
+  padding: 10px 10px;
+}
+
+.navButton {
+  margin: 0px 0px;
+  border-radius: 0px;
+}
+
+.yakuList {
+  text-align: left;
+}

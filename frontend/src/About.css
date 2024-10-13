@@ -1,0 +1,12 @@
+.link {
+  font-size: 30px;
+  margin: 15px 15px;
+}
+
+.main {
+  background-color: #3f3f3f;
+  padding: 10px 10px;
+  margin: 5px 5px;
+  display: flex;
+  flex-direction: column;
+}
