@@ -14,6 +14,10 @@ function Dora({
   setUradoraIndex,
 }) {
   function changeDora(tile, index) {
+    if (index === doraIndex) {
+      setDoraIndex(-1);
+      return;
+    }
     if (tile !== "B0") {
       dora[index] = "B0";
       setDora((d) => [...d]);
@@ -25,6 +29,10 @@ function Dora({
   }
 
   function changeUradora(tile, index) {
+    if (index === uradoraIndex) {
+      setUradoraIndex(-1);
+      return;
+    }
     if (tile !== "B0") {
       uradora[index] = "B0";
       setUradora((d) => [...d]);
