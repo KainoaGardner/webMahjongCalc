@@ -1,14 +1,12 @@
 package api
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/KainoaGardner/webMahjongCalc/internal"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
-	// "github.com/rs/cors"
+	"log"
+	"net/http"
 )
 
 type APIServer struct {
@@ -26,19 +24,14 @@ func (s *APIServer) Run() error {
 
 	r.Use(middleware.Logger)
 	r.Use(cors.Handler(cors.Options{
-		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"https://*", "http://*"},
-		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		//change allowedorings
+		AllowedOrigins:   []string{"https://*", "http://*", "127.0.0.1"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
-
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("welcome"))
-	})
 
 	r.Route("/api/v1", func(r chi.Router) {
 		handHandler := internal.NewHandler()
