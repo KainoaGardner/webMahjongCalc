@@ -9,7 +9,6 @@ services:
     environment:
       PUBLIC_HOST: "0.0.0.0"
       PORT: "8080"
-
     ports:
       - "8000:8000"
 

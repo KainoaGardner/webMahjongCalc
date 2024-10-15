@@ -210,7 +210,7 @@ func daishousuushi(hand *types.WinningHand) {
 	kaze := [][]string{}
 	for _, block := range hand.Hand {
 		if !kazeTiles[block[0]] {
-			return
+			continue
 		}
 
 		kaze = append(kaze, block)

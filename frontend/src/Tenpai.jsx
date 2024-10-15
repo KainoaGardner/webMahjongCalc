@@ -36,7 +36,6 @@ function Tenpai({ hand, chi, pon, kan, ankan }) {
 
   const tenpaiPost = async () => {
     try {
-      console.log(handParts);
       const response = await fetch("http://" + API_URL + "tenpai", {
         method: "POST",
         headers: {
@@ -47,7 +46,6 @@ function Tenpai({ hand, chi, pon, kan, ankan }) {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         changeTenpai(data);
       }
     } catch (error) {

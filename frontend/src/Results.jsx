@@ -130,7 +130,6 @@ function Results({
   };
 
   const scorePost = async () => {
-    console.log(scoreHandPost);
     try {
       const response = await fetch("http://" + API_URL + "points", {
         method: "POST",
@@ -142,7 +141,6 @@ function Results({
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         changeScore(data);
       }
     } catch (error) {

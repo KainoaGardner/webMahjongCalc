@@ -25,7 +25,7 @@ func (s *APIServer) Run() error {
 	r.Use(middleware.Logger)
 	r.Use(cors.Handler(cors.Options{
 		//change allowedorings
-		AllowedOrigins:   []string{"https://*", "http://*", "127.0.0.1"},
+		AllowedOrigins:   []string{"https://*", "http://*", "127.0.0.1", "localhost"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
@@ -40,6 +40,7 @@ func (s *APIServer) Run() error {
 	})
 
 	log.Println("Listening on", s.addr)
+	return http.ListenAndServe(":8080", r)
 	return http.ListenAndServe(s.addr, r)
 
 }
